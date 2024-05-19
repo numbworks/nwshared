@@ -8,9 +8,6 @@ Alias: nwsh
 MODULE_ALIAS : str = "nwsh"
 MODULE_NAME : str = "nwshared"
 MODULE_VERSION : str = "1.1.0"
-MODULE_DESCRIPTION : str = "A collection of shared components."
-MODULE_AUTHOR : str = "numbworks"
-MODULE_URL : str = "https://github.com/numbworks/nwshared"
 
 # GLOBAL MODULES
 import base64
