@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = "nwshared",
@@ -6,7 +6,7 @@ setup(
     description = "A collection of shared components.",
     author = "numbworks",
     url = "https://github.com/numbworks/nwshared",
-    packages = [ "nwshared" ],
+    packages = find_packages(),
     install_requires = [
         "matplotlib",
         "numpy",
