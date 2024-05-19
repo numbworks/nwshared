@@ -32,10 +32,12 @@ In order to import the `src/nwshared.py` module in other projects:
 PS C:\> pip install git+https://github.com/numbworks/nwshared.git
 ```
 
-3. Add the following import statement to your project:
+3. import the class(es) you need in your project:
 
 ```python
-import nwshared
+from nwshared import LambdaProvider
+
+# your code
 ```
 
 4. Done!
