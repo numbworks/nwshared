@@ -8,8 +8,8 @@ setup(
     url = "https://github.com/numbworks/nwshared",
     packages = find_packages(),
     install_requires = [
-        "matplotlib==3.8.2",
-        "numpy==1.26.3",
-        "pandas==2.2.0"
+        "matplotlib>=3.8.2",
+        "numpy>=1.26.3",
+        "pandas>=2.2.0"
     ]
 )
