@@ -32,15 +32,22 @@ In order to import the `src/nwshared.py` module in other projects:
 PS C:\> pip install -e 'git+https://github.com/numbworks/nwshared.git#egg=nwshared&subdirectory=src'
 ```
 
-3. import the class(es) you need in your project:
+3. launch the Python interpreter:
 
-```python
-from nwshared import LambdaProvider
-
-# your code
+```powershell
+PS C:\> python
 ```
 
-4. Done!
+4. try out if the module has been correctly installed by executing the following snippet of code:
+
+```python
+from nwshared import VersionChecker
+
+vc : VersionChecker = VersionChecker()
+print(vc.get_python_version_status())
+```
+
+5. Done!
 
 ## For Developers
 
@@ -91,6 +98,33 @@ In order to perform development work on this project in a comfortable way, you m
   ```
 
 3.	Done!
+
+## Known Issues - Python 3.12.x on Ubuntu 24.04 LTS
+
+I used a machine with `Ubuntu 24.04 LTS` to try out the module installation. `Ubuntu 24.04 LTS` offers `Python 3.12.x` as default Python interpreter (which it's good), but it suggests to use virtual environments to install extra packages on the machine.
+
+In order to do so, please run the following commands:
+
+```sh
+sudo apt install python3-venv -y
+python3 -m venv venv_nwshared
+source venv_nwshared/bin/activate
+```
+
+Once you are in the virtual environment, you can proceed installing the package:
+
+```sh
+pip install -e 'git+https://github.com/numbworks/nwshared.git#egg=nwshared&subdirectory=src'
+```
+
+Other useful commands:
+
+```sh
+deactivate
+pip uninstall nwshared
+pip list
+pip show nwshared
+```
 
 ## Markdown Toolset
 

@@ -21,7 +21,7 @@ from io import BytesIO
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from numpy import float64
-from pandas import DataFrame, Index, Series
+from pandas import DataFrame, Series
 from typing import Any, Callable, Tuple, Optional
 
 # CONSTANTS
