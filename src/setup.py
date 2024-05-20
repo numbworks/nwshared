@@ -10,7 +10,8 @@ setup(
     install_requires = [
         "matplotlib>=3.8.2",
         "numpy>=1.26.3",
-        "pandas>=2.2.0"
+        "pandas>=2.2.0",
+        "requests>=2.31.0"
     ],
     python_requires = ">=3.12",
     license = "MIT"
