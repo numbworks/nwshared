@@ -29,7 +29,7 @@ In order to import the `src/nwshared.py` module in other projects:
 2. Open `Windows Powershell` (or `Windows Terminal` or similar) and type:
 
 ```powershell
-PS C:\> pip install git+https://github.com/numbworks/nwshared.git
+PS C:\> pip install -e 'git+https://github.com/numbworks/nwshared.git#egg=nwshared&subdirectory=src'
 ```
 
 3. import the class(es) you need in your project:
