@@ -7,6 +7,9 @@ setup(
     author = "numbworks",
     url = "https://github.com/numbworks/nwshared",
     packages = ["nwshared"],
+    package_dir = {
+        'nwshared': '.'
+    },
     install_requires = [
         "matplotlib>=3.8.2",
         "numpy>=1.26.3",
