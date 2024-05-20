@@ -6,7 +6,7 @@ setup(
     description = "A collection of shared components.",
     author = "numbworks",
     url = "https://github.com/numbworks/nwshared",
-    packages = ["src/nwshared"],
+    packages = ["nwshared"],
     install_requires = [
         "matplotlib>=3.8.2",
         "numpy>=1.26.3",
