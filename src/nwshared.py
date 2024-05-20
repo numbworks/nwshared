@@ -26,7 +26,7 @@ from typing import Any, Callable, Tuple, Optional
 
 # CONSTANTS
 # STATIC CLASSES
-class MessageCollection():
+class _MessageCollection():
 
     '''Collects all the messages used for logging and for the exceptions.'''
     
@@ -39,13 +39,13 @@ class MessageCollection():
     
     @staticmethod
     def installed_python_version_matching(installed : Tuple[int, int, int], required : Tuple[int, int, int]) -> str:
-        installed_str : str = MessageCollection.__format_version(version = installed)
-        required_str : str = MessageCollection.__format_version(version = required)
+        installed_str : str = _MessageCollection.__format_version(version = installed)
+        required_str : str = _MessageCollection.__format_version(version = required)
         return f"The installed Python version is matching the expected one (installed: '{installed_str}', expected: '{required_str}')."
     @staticmethod
     def installed_python_version_not_matching(installed : Tuple[int, int, int], required : Tuple[int, int, int]) -> str:
-        installed_str : str = MessageCollection.__format_version(version = installed)
-        required_str : str = MessageCollection.__format_version(version = required)
+        installed_str : str = _MessageCollection.__format_version(version = installed)
+        required_str : str = _MessageCollection.__format_version(version = required)
         return f"Warning! The installed Python is not matching the expected one (installed: '{installed_str}', expected: '{required_str}')."
 
 # CLASSES
@@ -403,9 +403,9 @@ class VersionChecker():
         installed : Tuple[int, int, int] = (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
         
         if installed == required:
-            return MessageCollection.installed_python_version_matching(installed = installed, required = required)
+            return _MessageCollection.installed_python_version_matching(installed = installed, required = required)
         else:
-            return MessageCollection.installed_python_version_not_matching(installed = installed, required = required)
+            return _MessageCollection.installed_python_version_not_matching(installed = installed, required = required)
 class Formatter():
 
     '''Collects all the logic related to formatting tasks.'''
