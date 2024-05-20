@@ -126,6 +126,46 @@ pip list
 pip show nwshared
 ```
 
+## Known Issues - "Import nwshared could not be resolved Pylance (reportMissingImports)"
+
+If while trying to import `nwshared` in `Visual Studio Code` the following warning appears:
+
+```
+Import nwshared could not be resolved Pylance (reportMissingImports)
+```
+
+please:
+
+1. in `Windows Terminal` (or similar), launch the Python interpreter:
+
+```powershell
+PS C:\> python
+```
+
+2. run the following command:
+
+```python
+import nwshared
+print(nwshared.__file__)
+```
+
+3. the console will output something like this:
+
+```
+C:\Users\Rubèn\src\nwshared\src\nwshared.py
+```
+
+4. open `Visual Studio Code` > `File` > `Preferences` > `Settings` and search for `Python › Analysis: Extra Paths`;
+
+5. click on `Add item` and add the path above without the python file name: 
+
+```
+C:\Users\Rubèn\src\nwshared\src\
+```
+
+6. restart `Visual Studio Code`;
+7. Done!
+
 ## Markdown Toolset
 
 Suggested toolset to view and edit this Markdown file:
