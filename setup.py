@@ -12,5 +12,6 @@ setup(
         "numpy>=1.26.3",
         "pandas>=2.2.0"
     ],
-    python_requires = ">=3.12"
+    python_requires = ">=3.12",
+    license = "MIT"
 )
