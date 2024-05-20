@@ -101,7 +101,7 @@ In order to perform development work on this project in a comfortable way, you m
 
 ## Known Issues - Python 3.12.x on Ubuntu 24.04 LTS
 
-I used a machine with `Ubuntu 24.04 LTS` to try out the module installation. `Ubuntu 24.04 LTS` offers `Python 3.12.x` as default Python interpreter (which it's good), but it suggests to use virtual environments to install extra packages on the machine.
+I used a machine with `Ubuntu 24.04 LTS` to try out the module installation in a clean environment. `Ubuntu 24.04 LTS` offers `Python 3.12.x` as default Python interpreter (which it's good), but it suggests to use virtual environments to install extra packages on the machine.
 
 In order to do so, please run the following commands:
 
