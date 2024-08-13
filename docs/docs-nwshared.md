@@ -34,14 +34,15 @@ To inspect the functionalities of this Python module on Windows and Linux:
     - [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
     - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
 
-6. Click on <ins>File</ins> > <ins>Open folder</ins> > `nwshared`;
-7. Click on <ins>View</ins> > <ins>Command Palette</ins> and type:
+6. In order for Pylance to perform type checking, click on <ins>File</ins> > <ins>Preferences</ins> > <ins>Settings</ins> and set the `python.analysis.typeCheckingMode` setting to `basic`;
+7. Click on <ins>File</ins> > <ins>Open folder</ins> > `nwshared`;
+8. Click on <ins>View</ins> > <ins>Command Palette</ins> and type:
 
     ```
     > Dev Container: Reopen in Container
     ```
 
-8. Wait some minutes for the container defined in the <ins>.devcointainer</ins> folder to be built;
+9. Wait some minutes for the container defined in the <ins>.devcointainer</ins> folder to be built;
 10. Open the Python file (<ins>src/nwshared.py</ins>);
 11. Done!
 
