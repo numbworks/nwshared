@@ -1,2 +1,8 @@
+v1.2.0
+- Application:
+	- Feature: added support for Visual Studio Code's Dev Containers.
+- Documentation:
+	- Feature: updated to v1.2.0.
+
 v1.1.0
 - Initial Release.
