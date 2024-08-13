@@ -122,7 +122,7 @@ class FilePathManagerTestCase(unittest.TestCase):
         expected : list[str] = ["C:/1.html", "C:/2.html"]
 
         # Act
-        actual : str = FilePathManager().create_numbered_file_paths(folder_path = "C:/", range_start = 1, range_end = 3, extension = "html")
+        actual : list[str] = FilePathManager().create_numbered_file_paths(folder_path = "C:/", range_start = 1, range_end = 3, extension = "html")
         
         # Assert
         self.assertEqual(expected, actual)
@@ -208,7 +208,7 @@ class FileManagerTestCase(unittest.TestCase):
         file_manager : FileManager = FileManager(file_path_manager = FilePathManager())
         with patch.object(os, 'listdir', return_value = file_names) as mocked_listdir:
             with patch("builtins.open", mock_open(read_data = content)) as mocked_open:
-                actual : str = file_manager.load_contents(working_folder_path = working_folder_path, extension = extension)
+                actual : list[str] = file_manager.load_contents(working_folder_path = working_folder_path, extension = extension)
 
         # Assert
         self.assertEqual(2, mocked_open.call_count)
@@ -231,7 +231,7 @@ class FileManagerTestCase(unittest.TestCase):
         # Act
         file_manager : FileManager = FileManager(file_path_manager = FilePathManager())        
         with patch("builtins.open", mock_open()) as mocked_open:
-            actual : str = file_manager.save_content(content = content, file_path = file_path)
+            file_manager.save_content(content = content, file_path = file_path)
 
         # Assert
         mocked_open.assert_has_calls([ 
@@ -255,7 +255,7 @@ class FileManagerTestCase(unittest.TestCase):
         # Act
         file_manager : FileManager = FileManager(file_path_manager = FilePathManager())        
         with patch("builtins.open", mock_open()) as mocked_open:
-            actual : str = file_manager.save_contents(contents = contents, file_paths = file_paths)
+            file_manager.save_contents(contents = contents, file_paths = file_paths)
 
         # Assert
         self.assertEqual(2, mocked_open.call_count)            
@@ -292,7 +292,7 @@ class FileManagerTestCase(unittest.TestCase):
         # Act
         file_manager : FileManager = FileManager(file_path_manager = FilePathManager())        
         with patch("builtins.open", mock_open()) as mocked_open:
-            actual : str = file_manager.save_log(contents = contents, working_folder_path = working_folder_path, file_name = file_name)
+            file_manager.save_log(contents = contents, working_folder_path = working_folder_path, file_name = file_name)
 
         # Assert
         mocked_open.assert_has_calls([ 
@@ -328,7 +328,7 @@ class PageManagerTestCase(unittest.TestCase):
 
         # Act
         with patch.object(requests, "get", fake_response) as mocked_get:
-            actual : str = PageManager().get_page_contents(page_urls = page_urls)
+            actual : list[str] = PageManager().get_page_contents(page_urls = page_urls)
 
         # Assert
         self.assertEqual(2, mocked_get.call_count)
@@ -440,7 +440,7 @@ class ConverterTestCase(unittest.TestCase):
         
         # Arrange
         # Act
-        actual : str = Converter().convert_word_count_to_A4_sheets(word_count = word_count)
+        actual : int = Converter().convert_word_count_to_A4_sheets(word_count = word_count)
 
         # Assert
         self.assertEqual(expected, actual)
