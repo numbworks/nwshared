@@ -7,7 +7,7 @@ Alias: nwsh
 # INFORMATION
 MODULE_ALIAS : str = "nwsh"
 MODULE_NAME : str = "nwshared"
-MODULE_VERSION : str = "1.1.0"
+MODULE_VERSION : str = "1.2.0"
 
 # GLOBAL MODULES
 import base64
