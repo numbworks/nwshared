@@ -7,3 +7,4 @@ RUN pip install requests==2.31.0
 RUN pip install matplotlib==3.8.2
 RUN pip install coverage==7.2.3
 RUN pip install parameterized==0.9.0
+RUN pip install jinja2==3.1.4
