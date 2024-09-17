@@ -498,7 +498,6 @@ class LambdaProviderTestCase(unittest.TestCase):
             actual : str = buf.getvalue().replace("\n", "")
 
             self.assertEqual(expected, actual)
-
 class DisplayPreProcessorTestCase(unittest.TestCase):
 
     def test_hideindex_shouldreturnstylerobjectwithtruehideindexproperty_wheninvoked(self):
