@@ -491,7 +491,7 @@ class LambdaProvider():
 
     '''Provides useful lambda functions.'''
 
-    def get_default_logging_lambda(self) -> Callable[[str], None]:
+    def get_default_logging_function(self) -> Callable[[str], None]:
 
         '''An adapter around print().'''
 
