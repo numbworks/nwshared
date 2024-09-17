@@ -411,15 +411,18 @@ class Formatter():
 
     '''Collects all the logic related to formatting tasks.'''
 
-    def format_to_iso_8601(self, dt : datetime) -> str:
+    def format_to_iso_8601(self, dt : datetime, include_time : bool = False) -> str:
 
         '''
             "2023-08-03"
+            "2023-08-03 17:22:15"
         '''
 
-        dt_str : str = dt.strftime("%Y-%m-%d")
+        if include_time == False:
+            return dt.strftime(format = "%Y-%m-%d")
+        else:
+            return dt.strftime(format = "%Y-%m-%d %H:%M:%S")
 
-        return dt_str
     def format_usd_amount(self, amount : float64, rounding_digits : int) -> str:
 
         '''
