@@ -7,7 +7,7 @@ Alias: nwsh
 # INFORMATION
 MODULE_ALIAS : str = "nwsh"
 MODULE_NAME : str = "nwshared"
-MODULE_VERSION : str = "1.2.0"
+MODULE_VERSION : str = "1.3.0"
 
 # GLOBAL MODULES
 import base64
@@ -22,6 +22,7 @@ from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from numpy import float64
 from pandas import DataFrame, Series
+from pandas.io.formats.style import Styler
 from typing import Any, Callable, Tuple, Optional
 
 # CONSTANTS
@@ -495,6 +496,26 @@ class LambdaProvider():
         '''An adapter around print().'''
 
         return lambda msg : print(msg)
+class DisplayPreProcessor():
+
+    '''Provides pre-processing methods for IPython's display().'''
+
+    def hide_index(self, df : DataFrame) -> Styler:
+
+        '''
+            Hides df's index.
+        
+            Example:
+
+                dpp : DisplayPreProcessor = DisplayPreProcessor()
+                # ...
+                display(dpp.hide_index(df = df))
+        '''
+
+        styler : Styler = df.style.format()
+        styler.hide()
+
+        return styler
 
 # MAIN
 if __name__ == "__main__":
