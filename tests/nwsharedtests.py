@@ -9,6 +9,7 @@ from datetime import datetime
 from io import StringIO
 from numpy import float64
 from pandas import DataFrame
+from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
 from typing import Callable, Tuple
@@ -19,7 +20,7 @@ from unittest.mock import call, mock_open, patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
 from nwshared import PlotManager, DataFrameReverser, VersionChecker, Formatter
-from nwshared import Converter, LambdaProvider
+from nwshared import Converter, LambdaProvider, DisplayPreProcessor
 
 # SUPPORT METHODS
 class ObjectMother():
@@ -465,6 +466,19 @@ class LambdaProviderTestCase(unittest.TestCase):
             actual : str = buf.getvalue().replace("\n", "")
 
             self.assertEqual(expected, actual)
+class DisplayPreProcessorTestCase(unittest.TestCase):
+
+    def test_hideindex_shouldreturnstylerobjectwithtruehideindexproperty_wheninvoked(self):
+        
+        # Arrange
+        df : DataFrame = ObjectMother().create_remaining_days_dataframe()
+        diplay_pp : DisplayPreProcessor = DisplayPreProcessor()
+
+        # Act
+        styler : Styler = diplay_pp.hide_index(df = df)
+
+        # Assert
+        self.assertTrue(styler.hide_index_[0])
 
 # Main
 if __name__ == "__main__":
