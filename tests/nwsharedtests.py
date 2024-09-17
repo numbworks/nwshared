@@ -4,12 +4,14 @@ import pandas as pd
 import requests
 import sys
 import unittest
+from contextlib import redirect_stdout
 from datetime import datetime
+from io import StringIO
 from numpy import float64
 from pandas import DataFrame
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
-from typing import Tuple
+from typing import Callable, Tuple
 from unittest import mock
 from unittest.mock import call, mock_open, patch
 
@@ -17,7 +19,7 @@ from unittest.mock import call, mock_open, patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
 from nwshared import PlotManager, DataFrameReverser, VersionChecker, Formatter
-from nwshared import Converter
+from nwshared import Converter, LambdaProvider
 
 # SUPPORT METHODS
 class ObjectMother():
@@ -444,6 +446,25 @@ class ConverterTestCase(unittest.TestCase):
 
         # Assert
         self.assertEqual(expected, actual)
+class LambdaProviderTestCase(unittest.TestCase):
+
+    @parameterized.expand([
+        ["Some message", "Some message"]      
+    ])
+    def test_getdefaultloggingfunction_shouldreturnexpectedmessage_wheninvoked(self, msg : str, expected : str):
+        
+        # Arrange
+        lambda_provider : LambdaProvider = LambdaProvider()
+        logging_function : Callable[[str], None] = lambda_provider.get_default_logging_function() 
+
+        # Act
+        # Assert                
+        with StringIO() as buf, redirect_stdout(buf):
+          
+            logging_function(msg)
+            actual : str = buf.getvalue().replace("\n", "")
+
+            self.assertEqual(expected, actual)
 
 # Main
 if __name__ == "__main__":
