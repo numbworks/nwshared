@@ -7,6 +7,7 @@ Contact: numbworks@gmail.com
 |---|---|---|
 | 2024-05-19 | numbworks | Created. |
 | 2024-08-13 | numbworks | Updated to v1.2.0. |
+| 2024-09-17 | numbworks | Updated to v1.3.0. |
 
 ## Introduction
 
@@ -46,27 +47,6 @@ To inspect the functionalities of this Python module on Windows and Linux:
 10. Open the Python file (<ins>src/nwshared.py</ins>);
 11. Done!
 
-To try out if this Python module installs as a package as expected:
-
-1. Open your terminal application of choice and type the following commands:
-
-    ```
-    docker run -it python:3.12.5-bullseye /bin/bash
-    pip install -e 'git+https://github.com/numbworks/nwshared.git#egg=nwshared&subdirectory=src'
-    pip show nwshared | grep "Version"
-    exit
-    ```
-
-2. Remove the stopped container using the following commands:
-
-    ```
-    docker ps -a
-    docker rm {container_id}
-    ```
-
-3. Done!
-
-
 ## Unit Tests
 
 To run the unit tests in Visual Studio Code (while still connected to the Dev Container):
@@ -87,6 +67,43 @@ To calculate the unit test coverage in Visual Studio Code (while still connected
     ```
 
 3. Done!
+
+## How-To Release
+
+To try out if this Python module installs as a package as expected in the projects that have it as dependency, you'll need to simulate a release. 
+
+In order to do so:
+
+1. Once you pushed all the changes to Gihub and merged them to master, create a new release and add a version tag to it - i.e. `v1.3.0`;
+
+2. Open your terminal application of choice and type the following commands:
+
+    ```
+    docker run -it python:3.12.5-bullseye /bin/bash
+    pip install 'git+https://github.com/numbworks/nwshared.git@v1.3.0#egg=nwshared&subdirectory=src'
+    pip show nwshared | grep "Version"
+    ```
+
+3. Perform an additional verification by using the Python interpreter in the container:
+
+    ```
+    python3
+    import nwshared as nwsh
+    nwsh.MODULE_VERSION
+    exit()
+    ```
+
+4. Exit from the container by typing `exit`;
+5. Remove the stopped container using the following commands:
+
+    ```
+    docker ps -a
+    docker rm {container_id}
+    ```
+
+6. Done!
+
+Note: if something goes wrong, don't panic - Github releases can be deleted and re-created as many times as you want.
 
 ## Known Issues - "Import nwshared could not be resolved Pylance (reportMissingImports)"
 
