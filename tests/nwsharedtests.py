@@ -477,6 +477,28 @@ class LambdaProviderTestCase(unittest.TestCase):
             actual : str = buf.getvalue().replace("\n", "")
 
             self.assertEqual(expected, actual)
+
+    def test_gettimestampedloggingfunction_shouldreturnexpectedmessage_wheninvoked(self):
+        
+        # Arrange
+        dt : datetime = datetime(year = 2023, month = 8, day = 3, hour = 17, minute = 22, second = 15)
+        now_function : Callable[[], datetime] = lambda : dt
+
+        lambda_provider : LambdaProvider = LambdaProvider()
+        logging_function : Callable[[str], None] = lambda_provider.get_timestamped_logging_function(now_function = now_function) 
+
+        msg : str = "Some message"        
+        expected : str = "[2023-08-03 17:22:15] Some message"
+
+        # Act
+        # Assert                
+        with StringIO() as buf, redirect_stdout(buf):
+          
+            logging_function(msg)
+            actual : str = buf.getvalue().replace("\n", "")
+
+            self.assertEqual(expected, actual)
+
 class DisplayPreProcessorTestCase(unittest.TestCase):
 
     def test_hideindex_shouldreturnstylerobjectwithtruehideindexproperty_wheninvoked(self):
