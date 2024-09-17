@@ -1,6 +1,8 @@
 v1.3.0 - BREAKING CHANGES
 - Application:
 	- Feature: added support for DisplayPreProcessor.
+- Documentation:
+	- Feature: updated to v1.3.0.
 
 v1.2.0
 - Application:
