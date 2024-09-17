@@ -11,7 +11,8 @@ setup(
         "matplotlib>=3.8.2",
         "numpy>=1.26.3",
         "pandas>=2.2.0",
-        "requests>=2.31.0"
+        "requests>=2.31.0",
+        "jinja2>=3.1.4"
     ],
     python_requires = ">=3.12",
     license = "MIT"
