@@ -422,7 +422,6 @@ class Formatter():
             return dt.strftime(format = "%Y-%m-%d")
         else:
             return dt.strftime(format = "%Y-%m-%d %H:%M:%S")
-
     def format_usd_amount(self, amount : float64, rounding_digits : int) -> str:
 
         '''
