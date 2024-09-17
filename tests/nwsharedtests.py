@@ -4,12 +4,15 @@ import pandas as pd
 import requests
 import sys
 import unittest
+from contextlib import redirect_stdout
 from datetime import datetime
+from io import StringIO
 from numpy import float64
 from pandas import DataFrame
+from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
-from typing import Tuple
+from typing import Callable, Tuple
 from unittest import mock
 from unittest.mock import call, mock_open, patch
 
@@ -17,7 +20,7 @@ from unittest.mock import call, mock_open, patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
 from nwshared import PlotManager, DataFrameReverser, VersionChecker, Formatter
-from nwshared import Converter
+from nwshared import Converter, LambdaProvider, DisplayPreProcessor
 
 # SUPPORT METHODS
 class ObjectMother():
@@ -386,14 +389,25 @@ class VersionCheckerTestCase(unittest.TestCase):
         self.assertEqual(expected, actual)
 class FormatterTestCase(unittest.TestCase):
 
-    def test_formattoiso8601_shouldreturnexpectedstring_wheninvoked(self):
+    def test_formattoiso8601_shouldreturnexpectedstring_whenincludetimeisfalse(self):
         
         # Arrange
         dt : datetime = datetime(year = 2023, month = 8, day = 3)
         expected : str = "2023-08-03"
 
         # Act
-        actual : str = Formatter().format_to_iso_8601(dt = dt)
+        actual : str = Formatter().format_to_iso_8601(dt = dt, include_time = False)
+
+        # Assert
+        self.assertEqual(expected, actual)
+    def test_formattoiso8601_shouldreturnexpectedstring_whenincludetimeistrue(self):
+        
+        # Arrange
+        dt : datetime = datetime(year = 2023, month = 8, day = 3, hour = 17, minute = 22, second = 15)
+        expected : str = "2023-08-03 17:22:15"
+
+        # Act
+        actual : str = Formatter().format_to_iso_8601(dt = dt, include_time = True)
 
         # Assert
         self.assertEqual(expected, actual)
@@ -444,6 +458,59 @@ class ConverterTestCase(unittest.TestCase):
 
         # Assert
         self.assertEqual(expected, actual)
+class LambdaProviderTestCase(unittest.TestCase):
+
+    @parameterized.expand([
+        ["Some message", "Some message"]      
+    ])
+    def test_getdefaultloggingfunction_shouldreturnexpectedmessage_wheninvoked(self, msg : str, expected : str):
+        
+        # Arrange
+        lambda_provider : LambdaProvider = LambdaProvider()
+        logging_function : Callable[[str], None] = lambda_provider.get_default_logging_function() 
+
+        # Act
+        # Assert                
+        with StringIO() as buf, redirect_stdout(buf):
+          
+            logging_function(msg)
+            actual : str = buf.getvalue().replace("\n", "")
+
+            self.assertEqual(expected, actual)
+
+    def test_gettimestampedloggingfunction_shouldreturnexpectedmessage_wheninvoked(self):
+        
+        # Arrange
+        dt : datetime = datetime(year = 2023, month = 8, day = 3, hour = 17, minute = 22, second = 15)
+        now_function : Callable[[], datetime] = lambda : dt
+
+        lambda_provider : LambdaProvider = LambdaProvider()
+        logging_function : Callable[[str], None] = lambda_provider.get_timestamped_logging_function(now_function = now_function) 
+
+        msg : str = "Some message"        
+        expected : str = "[2023-08-03 17:22:15] Some message"
+
+        # Act
+        # Assert                
+        with StringIO() as buf, redirect_stdout(buf):
+          
+            logging_function(msg)
+            actual : str = buf.getvalue().replace("\n", "")
+
+            self.assertEqual(expected, actual)
+class DisplayPreProcessorTestCase(unittest.TestCase):
+
+    def test_hideindex_shouldreturnstylerobjectwithtruehideindexproperty_wheninvoked(self):
+        
+        # Arrange
+        df : DataFrame = ObjectMother().create_remaining_days_dataframe()
+        diplay_pp : DisplayPreProcessor = DisplayPreProcessor()
+
+        # Act
+        styler : Styler = diplay_pp.hide_index(df = df)
+
+        # Assert
+        self.assertTrue(styler.hide_index_[0])
 
 # Main
 if __name__ == "__main__":

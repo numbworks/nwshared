@@ -1,3 +1,7 @@
+v1.3.0 - BREAKING CHANGES
+- Application:
+	- Feature: added support for DisplayPreProcessor.
+
 v1.2.0
 - Application:
 	- Feature: added support for Visual Studio Code's Dev Containers.

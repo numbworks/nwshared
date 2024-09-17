@@ -7,7 +7,7 @@ Alias: nwsh
 # INFORMATION
 MODULE_ALIAS : str = "nwsh"
 MODULE_NAME : str = "nwshared"
-MODULE_VERSION : str = "1.2.0"
+MODULE_VERSION : str = "1.3.0"
 
 # GLOBAL MODULES
 import base64
@@ -22,6 +22,7 @@ from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from numpy import float64
 from pandas import DataFrame, Series
+from pandas.io.formats.style import Styler
 from typing import Any, Callable, Tuple, Optional
 
 # CONSTANTS
@@ -410,15 +411,17 @@ class Formatter():
 
     '''Collects all the logic related to formatting tasks.'''
 
-    def format_to_iso_8601(self, dt : datetime) -> str:
+    def format_to_iso_8601(self, dt : datetime, include_time : bool = False) -> str:
 
         '''
             "2023-08-03"
+            "2023-08-03 17:22:15"
         '''
 
-        dt_str : str = dt.strftime("%Y-%m-%d")
-
-        return dt_str
+        if include_time == False:
+            return dt.strftime(format = "%Y-%m-%d")
+        else:
+            return dt.strftime(format = "%Y-%m-%d %H:%M:%S")
     def format_usd_amount(self, amount : float64, rounding_digits : int) -> str:
 
         '''
@@ -490,11 +493,44 @@ class LambdaProvider():
 
     '''Provides useful lambda functions.'''
 
-    def get_default_logging_lambda(self) -> Callable[[str], None]:
+    def get_default_logging_function(self) -> Callable[[str], None]:
 
-        '''An adapter around print().'''
+        '''
+            An adapter around print().
+            Prints something like: "Some message"
+        '''
 
         return lambda msg : print(msg)
+    def get_timestamped_logging_function(self, now_function : Callable[[], datetime] = lambda : datetime.now()) -> Callable[[str], None]:
+
+        '''
+            An adapter around print(). 
+            Prints something like: "[2023-08-03 17:22:15] Some message"
+        '''
+
+        dt_str : str = Formatter().format_to_iso_8601(dt = now_function(), include_time = True)
+
+        return lambda msg : print(f"[{dt_str}] {msg}")
+class DisplayPreProcessor():
+
+    '''Provides pre-processing methods for IPython's display().'''
+
+    def hide_index(self, df : DataFrame) -> Styler:
+
+        '''
+            Hides df's index.
+        
+            Example:
+
+                dpp : DisplayPreProcessor = DisplayPreProcessor()
+                # ...
+                display(dpp.hide_index(df = df))
+        '''
+
+        styler : Styler = df.style.format()
+        styler.hide()
+
+        return styler
 
 # MAIN
 if __name__ == "__main__":
