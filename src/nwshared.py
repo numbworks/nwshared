@@ -16,7 +16,7 @@ from io import BytesIO
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from numpy import float64
-from pandas import DataFrame, Series
+from pandas import DataFrame, Index, Series
 from pandas.io.formats.style import Styler
 from typing import Any, Callable, Tuple, Optional
 
@@ -456,7 +456,7 @@ class Converter():
         '''Converts the index of the provided DataFrame to blanks.'''
 
         blank_idx : list[str] = [''] * len(df)
-        df.index = blank_idx
+        df.index = Index(blank_idx)
 
         return df
     def convert_index_to_one_based(self, df : DataFrame) -> DataFrame:
