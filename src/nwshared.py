@@ -526,6 +526,72 @@ class DisplayPreProcessor():
         styler.hide()
 
         return styler
+class MarkdownHelper():
+
+    '''Collects a bunch of helper functions related to Markdown.'''
+
+    __formatter : Formatter
+
+    def __init__(self, formatter : Formatter) -> None:
+
+        self.__formatter = formatter
+
+    def get_markdown_header(self, last_update : datetime, paragraph_title : str) -> str:
+        
+        '''
+            ## Revision History
+
+            |Date|Author|Description|
+            |---|---|---|
+            |2020-12-22|numbworks|Created.|
+            |2023-04-28|numbworks|Last update.|
+
+            ## Reading List By Month
+        '''
+
+        lines : list[str] = [
+            "## Revision History", 
+            "", 
+            "|Date|Author|Description|", 
+            "|---|---|---|",
+            "|2020-12-22|numbworks|Created.|",
+            f"|{self.__formatter.format_to_iso_8601(dt = last_update)}|numbworks|Last update.|",
+            "",
+            f"## {paragraph_title}",
+            ""
+            ]
+
+        markdown_header : str = "\n".join(lines)
+
+        return markdown_header
+    def add_subscript_tags_to_value(self, value : str) -> str:
+
+        '''
+        "49.99" => "<sub>49.99</sub>"
+        '''
+
+        tagged : str = f"<sub>{value}</sub>"
+
+        return tagged
+    def add_subscript_tags_to_dataframe(self, df : DataFrame) -> DataFrame:
+
+        '''Adds subscript tags to every cell and column name of the provided DataFrame.'''
+
+        tagged_df = df.copy(deep=True)
+        
+        tagged_df = tagged_df.map(func = self.add_subscript_tags_to_value)
+        tagged_df = tagged_df.rename(columns = lambda column_name : self.add_subscript_tags_to_value(value = column_name))
+
+        return tagged_df
+    def format_file_name_as_content(self, file_name : str) -> str:
+
+        '''Formats the provided file_name so that it can be displayed on the screen before the Markdown content.'''
+
+        md_content : str = file_name
+        md_content += "\n"
+        md_content += ""
+
+        return md_content
 
 # MAIN
 if __name__ == "__main__":

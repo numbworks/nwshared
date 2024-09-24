@@ -20,7 +20,7 @@ from unittest.mock import call, mock_open, patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
 from nwshared import PlotManager, DataFrameReverser, VersionChecker, Formatter
-from nwshared import Converter, LambdaProvider, DisplayPreProcessor
+from nwshared import Converter, LambdaProvider, DisplayPreProcessor, MarkdownHelper
 
 # SUPPORT METHODS
 class ObjectMother():
@@ -511,6 +511,60 @@ class DisplayPreProcessorTestCase(unittest.TestCase):
 
         # Assert
         self.assertTrue(styler.hide_index_[0])
+class MarkdownHelperTestCase(unittest.TestCase):
+
+    def test_getmarkdownheader_shouldreturnexpectedstring_wheninvoked(self):
+        
+        # Arrange
+        last_update : datetime = datetime(2023, 4, 28)
+        paragraph_title : str = "Reading List By Month"
+        
+        lines : list[str] = [
+            "## Revision History",
+            "",
+            "|Date|Author|Description|",
+            "|---|---|---|",
+            "|2020-12-22|numbworks|Created.|",
+            "|2023-04-28|numbworks|Last update.|",
+            "",
+            "## Reading List By Month",
+            ""
+        ]
+        expected : str = "\n".join(lines)
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual : str = markdown_helper.get_markdown_header(last_update = last_update, paragraph_title = paragraph_title)
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    @parameterized.expand([
+        ["49.99", "<sub>49.99</sub>"]
+    ])
+    def test_addsubscripttagstovalue_shouldreturnexpectedstring_wheninvoked(self, value : str, expected : str):
+        
+        # Arrange
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual : str = markdown_helper.add_subscript_tags_to_value(value = value)
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    def test_formatfilenameascontent_shouldreturnexpectedstring_wheninvoked(self):
+
+        # Arrange
+        file_name : str = "example.txt"
+        expected : str = "example.txt\n"
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual : str = markdown_helper.format_file_name_as_content(file_name = file_name)
+        
+        # Assert
+        self.assertEqual(actual, expected)
 
 # Main
 if __name__ == "__main__":
