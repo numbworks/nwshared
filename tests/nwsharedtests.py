@@ -475,6 +475,24 @@ class PlotManagerTestCase(unittest.TestCase):
         
         # Assert
         self.assertEqual(expected, actual)
+    def test_describedataframe_shouldreturnexpecteddataframe_wheninvoked(self) -> None:
+
+        # Arrange
+        df : DataFrame = pd.DataFrame({
+                    "A": [1, 2, 3, 4, 5],
+                    "B": [5, 4, 3, 2, 1]
+                })
+        column_names : list[str] = ["A", "B"]
+        expected_df : DataFrame = pd.DataFrame({
+            "A": ["5", "3", "1.58114", "1", "2", "3", "4", "5"],
+            "B": ["5", "3", "1.58114", "1", "2", "3", "4", "5"]
+        }, index=["count", "mean", "std", "min", "25%", "50%", "75%", "max"])
+        
+        # Act
+        actual_df : DataFrame = PlotManager().describe_dataframe(df = df, column_names = column_names)
+        
+        # Assert
+        assert_frame_equal(actual_df, expected_df)
 class DataFrameReverserTestCase(unittest.TestCase):
 
     def test_convertdataframetosource_code_shouldreturnexpectedstring_wheninvoked(self):
