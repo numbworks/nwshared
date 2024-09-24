@@ -1,3 +1,11 @@
+v1.4.0
+- Application:
+	- Feature: added support for MarkdownHelper.
+	- Refactoring: moved packaging information to setup.py.
+	- Maintenance: Dockerfile updated (coverage 7.2.3 => 7.6.1, added support for pandoc 3.4.1).
+- Documentation:
+	- Feature: updated to v1.4.0.
+
 v1.3.0 - BREAKING CHANGES
 - Application:
 	- Feature: added support for DisplayPreProcessor.
