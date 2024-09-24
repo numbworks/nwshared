@@ -553,6 +553,24 @@ class MarkdownHelperTestCase(unittest.TestCase):
         # Assert
         self.assertEqual(expected, actual)
 
+    def test_addsubscripttagstodataframe_shouldreturnexpecteddataframe_wheninvoked(self):
+
+        # Arrange
+        df : DataFrame = pd.DataFrame({
+            'A': ['1', '2'],
+            'B': ['3', '4']
+        })
+        expected_df : DataFrame = pd.DataFrame({
+            '<sub>A</sub>': ['<sub>1</sub>', '<sub>2</sub>'],
+            '<sub>B</sub>': ['<sub>3</sub>', '<sub>4</sub>']
+        })        
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual_df : DataFrame = markdown_helper.add_subscript_tags_to_dataframe(df = df)
+
+        # Assert
+        assert_frame_equal(actual_df, expected_df)
     def test_formatfilenameascontent_shouldreturnexpectedstring_wheninvoked(self):
 
         # Arrange
