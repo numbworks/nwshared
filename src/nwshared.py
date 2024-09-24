@@ -272,7 +272,7 @@ class PlotManager():
         fig : Optional[Figure] = df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize).get_figure()
         
         image_string : Optional[str] = None
-        
+
         if fig:
             fig.savefig(buffer, format = "png", bbox_inches = 'tight')
             plt.close(fig)
@@ -511,7 +511,7 @@ class DisplayPreProcessor():
 
     '''Provides pre-processing methods for IPython's display().'''
 
-    def hide_index(self, df : DataFrame) -> Styler:
+    def hide_index(self, df : DataFrame, formatters : Optional[dict] = None) -> Styler:
 
         '''
             Hides df's index.
@@ -521,9 +521,16 @@ class DisplayPreProcessor():
                 dpp : DisplayPreProcessor = DisplayPreProcessor()
                 # ...
                 display(dpp.hide_index(df = df))
+
+            Example for 'formatters':
+
+                formatters : dict = { "Price" : "{:.2f}" }
         '''
 
         styler : Styler = df.style.format()
+        if formatters:
+            styler = df.style.format(formatters)
+
         styler.hide()
 
         return styler
