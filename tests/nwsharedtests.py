@@ -5,10 +5,10 @@ import requests
 import sys
 import unittest
 from contextlib import redirect_stdout
-from datetime import datetime
+from datetime import date, datetime
 from io import StringIO
 from numpy import float64
-from pandas import DataFrame
+from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
@@ -458,6 +458,41 @@ class ConverterTestCase(unittest.TestCase):
 
         # Assert
         self.assertEqual(expected, actual)
+
+    def test_convertindextoblanks_shouldreturnexpectedindex_wheninvoked(self):
+
+        # Arrange
+        df: DataFrame = DataFrame({'A': [1, 2, 3]})
+        expected: list[str] = [''] * len(df)
+
+        # Act
+        actual_df: DataFrame = Converter().convert_index_to_blanks(df = df)
+
+        # Assert
+        self.assertEqual(list(actual_df.index), expected)
+    def test_convertindextoonebased_shouldreturnexpectedindex_wheninvoked(self):
+        
+        # Arrange
+        df: DataFrame = DataFrame({'A': [1, 2, 3]})
+        df.index = Index([0, 1, 2])
+        expected: list[int] = [1, 2, 3]
+
+        # Act
+        actual_df: DataFrame = Converter().convert_index_to_one_based(df = df)
+
+        # Assert
+        self.assertEqual(list(actual_df.index), expected)
+    def test_convertdatetodatetime_shouldreturnexpecteddate_wheninvoked(self):
+
+        # Arrange
+        dt : date = date(2023, 1, 1)
+        expected: datetime = datetime(2023, 1, 1)
+
+        # Act
+        actual : datetime = Converter().convert_date_to_datetime(dt)
+
+        # Assert
+        self.assertEqual(actual, expected)
 class LambdaProviderTestCase(unittest.TestCase):
 
     @parameterized.expand([
