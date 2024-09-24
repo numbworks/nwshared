@@ -672,17 +672,34 @@ class LambdaProviderTestCase(unittest.TestCase):
             self.assertEqual(expected, actual)
 class DisplayPreProcessorTestCase(unittest.TestCase):
 
-    def test_hideindex_shouldreturnstylerobjectwithtruehideindexproperty_wheninvoked(self):
+    def test_hideindex_shouldreturnstylerobjectwithhiddenindex_whennoformattersareprovided(self):
         
         # Arrange
-        df : DataFrame = ObjectMother().create_remaining_days_dataframe()
+        df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
         diplay_pp : DisplayPreProcessor = DisplayPreProcessor()
 
         # Act
-        styler : Styler = diplay_pp.hide_index(df = df)
+        actual : Styler = diplay_pp.hide_index(df = df)
+        actual_html : str = actual.to_html()        
 
         # Assert
-        self.assertTrue(styler.hide_index_[0])
+        self.assertTrue(actual.hide_index_[0])
+        self.assertIn("1.123456", actual_html)
+        self.assertIn("2.654321", actual_html)
+    def test_hideindex_shouldformatfloatvaluesasexpected_whenformattersareprovided(self):
+
+        # Arrange
+        df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
+        formatters : Optional[dict] = {"A" : "{:.2f}"}
+
+        # Act
+        actual : Styler = DisplayPreProcessor().hide_index(df = df, formatters = formatters)
+        actual_html : str = actual.to_html()
+
+        # Assert
+        self.assertTrue(actual.hide_index_[0])
+        self.assertIn("1.12", actual_html)
+        self.assertIn("2.65", actual_html)
 class MarkdownHelperTestCase(unittest.TestCase):
 
     def test_getmarkdownheader_shouldreturnexpectedstring_wheninvoked(self):
