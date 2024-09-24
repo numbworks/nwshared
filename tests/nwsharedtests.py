@@ -12,7 +12,7 @@ from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
-from typing import Callable, Optional, Tuple, cast
+from typing import Any, Callable, Optional, Tuple, cast
 from unittest import mock
 from unittest.mock import call, mock_open, patch
 
@@ -423,7 +423,7 @@ class PlotManagerTestCase(unittest.TestCase):
         # Assert
         self.assertTrue(callable(func))
         func() # Ensures that the function runs without error.
-    def test_createbarplotasbase64_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+    def test_createbarplotasbase64_shouldreturnexpectedstring_wheninvoked(self) -> None:
         
         # Arrange
         df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
@@ -436,8 +436,33 @@ class PlotManagerTestCase(unittest.TestCase):
         actual_str : str = cast(str, actual)
 
         # Assert
-        self.assertIsInstance(actual, Optional[str])
         self.assertTrue(actual_str.startswith("iVBORw0KGgo"))
+
+    def test_createboxplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = pd.DataFrame({"seller_alias": [1, 2, 3, 4, 5]})
+        x_name : str = "seller_alias"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        func : Callable[..., Any] = PlotManager().create_box_plot_function(df = df, x_name = x_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(callable(func))
+        func() # Ensures that the function runs without error.
+    def test_createboxplotasbase64_shouldreturnexpectedstring_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = pd.DataFrame({"seller_alias": [1, 2, 3, 4, 5]})
+        x_name : str = "seller_alias"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        actual : str = PlotManager().create_box_plot_as_base64(df = df, x_name = x_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(actual.startswith("iVBORw0KGgo"))
 
     def test_createhtmlimagetag_shouldreturnexpectedstring_wheninvoked(self):
         
