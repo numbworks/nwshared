@@ -92,6 +92,30 @@ class OutlierManagerTestCase(unittest.TestCase):
 
         # Assert
         assert_frame_equal(expected_df , actual_df) 
+    def test_tryremovelowerboundoutliers_shouldraiseanexception_whencolumndoesnotexist(self):
+        
+		# Arrange
+        df : DataFrame = pd.DataFrame({"A" : [1, 2, 3]})
+        column_name : str = "B"
+        outlier_manager : OutlierManager = OutlierManager()
+
+        # Act
+        actual : DataFrame = outlier_manager.try_remove_lower_bound_outliers(df = df, column_name = column_name)
+
+        # Assert
+        self.assertTrue(actual.equals(df))
+    def test_tryremoveupperboundoutliers_shouldraiseanexception_whencolumndoesnotexist(self):
+        
+		# Arrange
+        df : DataFrame = pd.DataFrame({"A" : [1, 2, 3]})
+        column_name : str = "B"
+        outlier_manager : OutlierManager = OutlierManager()
+
+        # Act
+        actual : DataFrame = outlier_manager.try_remove_upper_bound_outliers(df = df, column_name = column_name)
+
+        # Assert
+        self.assertTrue(actual.equals(df))
 class FilePathManagerTestCase(unittest.TestCase):
 
     def test_createfilepath_shouldreturnexpectedfilepath_whenproperarguments(self):
