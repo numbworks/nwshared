@@ -369,6 +369,46 @@ class PageManagerTestCase(unittest.TestCase):
         self.assertEqual("Antikt & Design", actual)          
 class PlotManagerTestCase(unittest.TestCase):
 
+    @patch("pandas.DataFrame.plot")
+    def test_showbarplot_shouldbecalledwithprovidedarguments_wheninvoked(self, mock_plot) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        x_name : str = "A"
+        y_name : str = "B"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        PlotManager().show_bar_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+
+        # Assert
+        mock_plot.assert_called_once_with(
+            x = x_name, 
+            y = y_name, 
+            legend = True, 
+            kind = "bar", 
+            title = f"{y_name} by {x_name}", 
+            figsize=figsize
+            )
+    
+    @patch('matplotlib.pyplot.show')
+    @patch('matplotlib.pyplot.figure')
+    @patch('matplotlib.pyplot.boxplot')
+    def test_showboxplot_shouldbecalledwithprovidedarguments_wheninvoked(self, mock_boxplot, mock_figure, mock_show) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        x_name : str = "A"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        PlotManager().show_box_plot(df = df, x_name = x_name)
+
+        # Assert
+        mock_figure.assert_called_once_with(figsize = figsize)
+        mock_boxplot.assert_called_once_with(x = df[x_name], vert = False, labels = [x_name])
+        mock_show.assert_called_once()
+
     def test_createhtmlimagetag_shouldreturnexpectedstring_wheninvoked(self):
         
         # Arrange
