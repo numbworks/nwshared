@@ -5,14 +5,14 @@ import requests
 import sys
 import unittest
 from contextlib import redirect_stdout
-from datetime import datetime
+from datetime import date, datetime
 from io import StringIO
 from numpy import float64
-from pandas import DataFrame
+from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
-from typing import Callable, Tuple
+from typing import Any, Callable, Optional, Tuple, cast
 from unittest import mock
 from unittest.mock import call, mock_open, patch
 
@@ -20,7 +20,7 @@ from unittest.mock import call, mock_open, patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
 from nwshared import PlotManager, DataFrameReverser, VersionChecker, Formatter
-from nwshared import Converter, LambdaProvider, DisplayPreProcessor
+from nwshared import Converter, LambdaProvider, DisplayPreProcessor, MarkdownHelper
 
 # SUPPORT METHODS
 class ObjectMother():
@@ -92,6 +92,30 @@ class OutlierManagerTestCase(unittest.TestCase):
 
         # Assert
         assert_frame_equal(expected_df , actual_df) 
+    def test_tryremovelowerboundoutliers_shouldraiseanexception_whencolumndoesnotexist(self):
+        
+		# Arrange
+        df : DataFrame = pd.DataFrame({"A" : [1, 2, 3]})
+        column_name : str = "B"
+        outlier_manager : OutlierManager = OutlierManager()
+
+        # Act
+        actual : DataFrame = outlier_manager.try_remove_lower_bound_outliers(df = df, column_name = column_name)
+
+        # Assert
+        self.assertTrue(actual.equals(df))
+    def test_tryremoveupperboundoutliers_shouldraiseanexception_whencolumndoesnotexist(self):
+        
+		# Arrange
+        df : DataFrame = pd.DataFrame({"A" : [1, 2, 3]})
+        column_name : str = "B"
+        outlier_manager : OutlierManager = OutlierManager()
+
+        # Act
+        actual : DataFrame = outlier_manager.try_remove_upper_bound_outliers(df = df, column_name = column_name)
+
+        # Assert
+        self.assertTrue(actual.equals(df))
 class FilePathManagerTestCase(unittest.TestCase):
 
     def test_createfilepath_shouldreturnexpectedfilepath_whenproperarguments(self):
@@ -345,6 +369,101 @@ class PageManagerTestCase(unittest.TestCase):
         self.assertEqual("Antikt & Design", actual)          
 class PlotManagerTestCase(unittest.TestCase):
 
+    @patch("pandas.DataFrame.plot")
+    def test_showbarplot_shouldbecalledwithprovidedarguments_wheninvoked(self, mock_plot) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        x_name : str = "A"
+        y_name : str = "B"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        PlotManager().show_bar_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+
+        # Assert
+        mock_plot.assert_called_once_with(
+            x = x_name, 
+            y = y_name, 
+            legend = True, 
+            kind = "bar", 
+            title = f"{y_name} by {x_name}", 
+            figsize=figsize
+            )
+    
+    @patch('matplotlib.pyplot.show')
+    @patch('matplotlib.pyplot.figure')
+    @patch('matplotlib.pyplot.boxplot')
+    def test_showboxplot_shouldbecalledwithprovidedarguments_wheninvoked(self, mock_boxplot, mock_figure, mock_show) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        x_name : str = "A"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        PlotManager().show_box_plot(df = df, x_name = x_name)
+
+        # Assert
+        mock_figure.assert_called_once_with(figsize = figsize)
+        mock_boxplot.assert_called_once_with(x = df[x_name], vert = False, labels = [x_name])
+        mock_show.assert_called_once()
+
+    def test_createbarplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        x_name : str = "seller_alias"
+        y_name : str = "items"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        func : Callable[[], None] = PlotManager().create_bar_plot_function(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(callable(func))
+        func() # Ensures that the function runs without error.
+    def test_createbarplotasbase64_shouldreturnexpectedstring_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        x_name : str = "seller_alias"
+        y_name : str = "items"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        actual : Optional[str] = PlotManager().create_bar_plot_as_base64(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        actual_str : str = cast(str, actual)
+
+        # Assert
+        self.assertTrue(actual_str.startswith("iVBORw0KGgo"))
+
+    def test_createboxplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = pd.DataFrame({"seller_alias": [1, 2, 3, 4, 5]})
+        x_name : str = "seller_alias"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        func : Callable[..., Any] = PlotManager().create_box_plot_function(df = df, x_name = x_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(callable(func))
+        func() # Ensures that the function runs without error.
+    def test_createboxplotasbase64_shouldreturnexpectedstring_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = pd.DataFrame({"seller_alias": [1, 2, 3, 4, 5]})
+        x_name : str = "seller_alias"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        actual : str = PlotManager().create_box_plot_as_base64(df = df, x_name = x_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(actual.startswith("iVBORw0KGgo"))
+
     def test_createhtmlimagetag_shouldreturnexpectedstring_wheninvoked(self):
         
         # Arrange
@@ -356,6 +475,24 @@ class PlotManagerTestCase(unittest.TestCase):
         
         # Assert
         self.assertEqual(expected, actual)
+    def test_describedataframe_shouldreturnexpecteddataframe_wheninvoked(self) -> None:
+
+        # Arrange
+        df : DataFrame = pd.DataFrame({
+                    "A": [1, 2, 3, 4, 5],
+                    "B": [5, 4, 3, 2, 1]
+                })
+        column_names : list[str] = ["A", "B"]
+        expected_df : DataFrame = pd.DataFrame({
+            "A": ["5", "3", "1.58114", "1", "2", "3", "4", "5"],
+            "B": ["5", "3", "1.58114", "1", "2", "3", "4", "5"]
+        }, index=["count", "mean", "std", "min", "25%", "50%", "75%", "max"])
+        
+        # Act
+        actual_df : DataFrame = PlotManager().describe_dataframe(df = df, column_names = column_names)
+        
+        # Assert
+        assert_frame_equal(actual_df, expected_df)
 class DataFrameReverserTestCase(unittest.TestCase):
 
     def test_convertdataframetosource_code_shouldreturnexpectedstring_wheninvoked(self):
@@ -458,6 +595,41 @@ class ConverterTestCase(unittest.TestCase):
 
         # Assert
         self.assertEqual(expected, actual)
+
+    def test_convertindextoblanks_shouldreturnexpectedindex_wheninvoked(self):
+
+        # Arrange
+        df: DataFrame = DataFrame({'A': [1, 2, 3]})
+        expected: list[str] = [''] * len(df)
+
+        # Act
+        actual_df: DataFrame = Converter().convert_index_to_blanks(df = df)
+
+        # Assert
+        self.assertEqual(list(actual_df.index), expected)
+    def test_convertindextoonebased_shouldreturnexpectedindex_wheninvoked(self):
+        
+        # Arrange
+        df: DataFrame = DataFrame({'A': [1, 2, 3]})
+        df.index = Index([0, 1, 2])
+        expected: list[int] = [1, 2, 3]
+
+        # Act
+        actual_df: DataFrame = Converter().convert_index_to_one_based(df = df)
+
+        # Assert
+        self.assertEqual(list(actual_df.index), expected)
+    def test_convertdatetodatetime_shouldreturnexpecteddate_wheninvoked(self):
+
+        # Arrange
+        dt : date = date(2023, 1, 1)
+        expected: datetime = datetime(2023, 1, 1)
+
+        # Act
+        actual : datetime = Converter().convert_date_to_datetime(dt)
+
+        # Assert
+        self.assertEqual(actual, expected)
 class LambdaProviderTestCase(unittest.TestCase):
 
     @parameterized.expand([
@@ -500,17 +672,106 @@ class LambdaProviderTestCase(unittest.TestCase):
             self.assertEqual(expected, actual)
 class DisplayPreProcessorTestCase(unittest.TestCase):
 
-    def test_hideindex_shouldreturnstylerobjectwithtruehideindexproperty_wheninvoked(self):
+    def test_hideindex_shouldreturnstylerobjectwithhiddenindex_whennoformattersareprovided(self):
         
         # Arrange
-        df : DataFrame = ObjectMother().create_remaining_days_dataframe()
+        df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
         diplay_pp : DisplayPreProcessor = DisplayPreProcessor()
 
         # Act
-        styler : Styler = diplay_pp.hide_index(df = df)
+        actual : Styler = diplay_pp.hide_index(df = df)
+        actual_html : str = actual.to_html()        
 
         # Assert
-        self.assertTrue(styler.hide_index_[0])
+        self.assertTrue(actual.hide_index_[0])
+        self.assertIn("1.123456", actual_html)
+        self.assertIn("2.654321", actual_html)
+    def test_hideindex_shouldformatfloatvaluesasexpected_whenformattersareprovided(self):
+
+        # Arrange
+        df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
+        formatters : Optional[dict] = {"A" : "{:.2f}"}
+
+        # Act
+        actual : Styler = DisplayPreProcessor().hide_index(df = df, formatters = formatters)
+        actual_html : str = actual.to_html()
+
+        # Assert
+        self.assertTrue(actual.hide_index_[0])
+        self.assertIn("1.12", actual_html)
+        self.assertIn("2.65", actual_html)
+class MarkdownHelperTestCase(unittest.TestCase):
+
+    def test_getmarkdownheader_shouldreturnexpectedstring_wheninvoked(self):
+        
+        # Arrange
+        last_update : datetime = datetime(2023, 4, 28)
+        paragraph_title : str = "Reading List By Month"
+        
+        lines : list[str] = [
+            "## Revision History",
+            "",
+            "|Date|Author|Description|",
+            "|---|---|---|",
+            "|2020-12-22|numbworks|Created.|",
+            "|2023-04-28|numbworks|Last update.|",
+            "",
+            "## Reading List By Month",
+            ""
+        ]
+        expected : str = "\n".join(lines)
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual : str = markdown_helper.get_markdown_header(last_update = last_update, paragraph_title = paragraph_title)
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    @parameterized.expand([
+        ["49.99", "<sub>49.99</sub>"]
+    ])
+    def test_addsubscripttagstovalue_shouldreturnexpectedstring_wheninvoked(self, value : str, expected : str):
+        
+        # Arrange
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual : str = markdown_helper.add_subscript_tags_to_value(value = value)
+
+        # Assert
+        self.assertEqual(expected, actual)
+
+    def test_addsubscripttagstodataframe_shouldreturnexpecteddataframe_wheninvoked(self):
+
+        # Arrange
+        df : DataFrame = pd.DataFrame({
+            'A': ['1', '2'],
+            'B': ['3', '4']
+        })
+        expected_df : DataFrame = pd.DataFrame({
+            '<sub>A</sub>': ['<sub>1</sub>', '<sub>2</sub>'],
+            '<sub>B</sub>': ['<sub>3</sub>', '<sub>4</sub>']
+        })        
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual_df : DataFrame = markdown_helper.add_subscript_tags_to_dataframe(df = df)
+
+        # Assert
+        assert_frame_equal(actual_df, expected_df)
+    def test_formatfilenameascontent_shouldreturnexpectedstring_wheninvoked(self):
+
+        # Arrange
+        file_name : str = "example.txt"
+        expected : str = "example.txt\n"
+        markdown_helper : MarkdownHelper = MarkdownHelper(formatter = Formatter())
+
+        # Act
+        actual : str = markdown_helper.format_file_name_as_content(file_name = file_name)
+        
+        # Assert
+        self.assertEqual(actual, expected)
 
 # Main
 if __name__ == "__main__":

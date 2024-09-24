@@ -4,11 +4,6 @@ A collection of shared components.
 Alias: nwsh
 '''
 
-# INFORMATION
-MODULE_ALIAS : str = "nwsh"
-MODULE_NAME : str = "nwshared"
-MODULE_VERSION : str = "1.3.0"
-
 # GLOBAL MODULES
 import base64
 import os
@@ -21,7 +16,7 @@ from io import BytesIO
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from numpy import float64
-from pandas import DataFrame, Series
+from pandas import DataFrame, Index, Series
 from pandas.io.formats.style import Styler
 from typing import Any, Callable, Tuple, Optional
 
@@ -276,13 +271,14 @@ class PlotManager():
         title = f"{y_name} by {x_name}"
         fig : Optional[Figure] = df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize).get_figure()
         
+        image_string : Optional[str] = None
+
         if fig:
             fig.savefig(buffer, format = "png", bbox_inches = 'tight')
             plt.close(fig)
-            image_string : str = base64.b64encode(buffer.getbuffer()).decode("ascii")
-            image_string
-
-        return None
+            image_string = base64.b64encode(buffer.getbuffer()).decode("ascii")
+            
+        return image_string
 
     def create_box_plot_function(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> Callable[..., Any]:
 
@@ -460,7 +456,7 @@ class Converter():
         '''Converts the index of the provided DataFrame to blanks.'''
 
         blank_idx : list[str] = [''] * len(df)
-        df.index = blank_idx
+        df.index = Index(blank_idx)
 
         return df
     def convert_index_to_one_based(self, df : DataFrame) -> DataFrame:
@@ -515,7 +511,7 @@ class DisplayPreProcessor():
 
     '''Provides pre-processing methods for IPython's display().'''
 
-    def hide_index(self, df : DataFrame) -> Styler:
+    def hide_index(self, df : DataFrame, formatters : Optional[dict] = None) -> Styler:
 
         '''
             Hides df's index.
@@ -525,12 +521,85 @@ class DisplayPreProcessor():
                 dpp : DisplayPreProcessor = DisplayPreProcessor()
                 # ...
                 display(dpp.hide_index(df = df))
+
+            Example for 'formatters':
+
+                formatters : dict = { "Price" : "{:.2f}" }
         '''
 
         styler : Styler = df.style.format()
+        if formatters:
+            styler = df.style.format(formatters)
+
         styler.hide()
 
         return styler
+class MarkdownHelper():
+
+    '''Collects a bunch of helper functions related to Markdown.'''
+
+    __formatter : Formatter
+
+    def __init__(self, formatter : Formatter) -> None:
+
+        self.__formatter = formatter
+
+    def get_markdown_header(self, last_update : datetime, paragraph_title : str) -> str:
+        
+        '''
+            ## Revision History
+
+            |Date|Author|Description|
+            |---|---|---|
+            |2020-12-22|numbworks|Created.|
+            |2023-04-28|numbworks|Last update.|
+
+            ## Reading List By Month
+        '''
+
+        lines : list[str] = [
+            "## Revision History", 
+            "", 
+            "|Date|Author|Description|", 
+            "|---|---|---|",
+            "|2020-12-22|numbworks|Created.|",
+            f"|{self.__formatter.format_to_iso_8601(dt = last_update)}|numbworks|Last update.|",
+            "",
+            f"## {paragraph_title}",
+            ""
+            ]
+
+        markdown_header : str = "\n".join(lines)
+
+        return markdown_header
+    def add_subscript_tags_to_value(self, value : str) -> str:
+
+        '''
+        "49.99" => "<sub>49.99</sub>"
+        '''
+
+        tagged : str = f"<sub>{value}</sub>"
+
+        return tagged
+    def add_subscript_tags_to_dataframe(self, df : DataFrame) -> DataFrame:
+
+        '''Adds subscript tags to every cell and column name of the provided DataFrame.'''
+
+        tagged_df = df.copy(deep=True)
+        
+        tagged_df = tagged_df.map(func = self.add_subscript_tags_to_value)
+        tagged_df = tagged_df.rename(columns = lambda column_name : self.add_subscript_tags_to_value(value = column_name))
+
+        return tagged_df
+    def format_file_name_as_content(self, file_name : str) -> str:
+
+        '''Formats the provided file_name so that it can be displayed on the screen before the Markdown content.'''
+
+        md_content : str = file_name
+        md_content += "\n"
+        md_content += ""
+
+        return md_content
 
 # MAIN
 if __name__ == "__main__":
