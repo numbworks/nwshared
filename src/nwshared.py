@@ -4,11 +4,6 @@ A collection of shared components.
 Alias: nwsh
 '''
 
-# INFORMATION
-MODULE_ALIAS : str = "nwsh"
-MODULE_NAME : str = "nwshared"
-MODULE_VERSION : str = "1.3.0"
-
 # GLOBAL MODULES
 import base64
 import os
