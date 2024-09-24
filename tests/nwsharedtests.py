@@ -12,7 +12,7 @@ from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
-from typing import Callable, Tuple
+from typing import Callable, Optional, Tuple, cast
 from unittest import mock
 from unittest.mock import call, mock_open, patch
 
@@ -408,6 +408,36 @@ class PlotManagerTestCase(unittest.TestCase):
         mock_figure.assert_called_once_with(figsize = figsize)
         mock_boxplot.assert_called_once_with(x = df[x_name], vert = False, labels = [x_name])
         mock_show.assert_called_once()
+
+    def test_createbarplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        x_name : str = "seller_alias"
+        y_name : str = "items"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        func : Callable[[], None] = PlotManager().create_bar_plot_function(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(callable(func))
+        func() # Ensures that the function runs without error.
+    def test_createbarplotasbase64_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        x_name : str = "seller_alias"
+        y_name : str = "items"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        actual : Optional[str] = PlotManager().create_bar_plot_as_base64(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        actual_str : str = cast(str, actual)
+
+        # Assert
+        self.assertIsInstance(actual, Optional[str])
+        self.assertTrue(actual_str.startswith("iVBORw0KGgo"))
 
     def test_createhtmlimagetag_shouldreturnexpectedstring_wheninvoked(self):
         

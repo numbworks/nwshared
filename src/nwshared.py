@@ -271,13 +271,14 @@ class PlotManager():
         title = f"{y_name} by {x_name}"
         fig : Optional[Figure] = df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize).get_figure()
         
+        image_string : Optional[str] = None
+        
         if fig:
             fig.savefig(buffer, format = "png", bbox_inches = 'tight')
             plt.close(fig)
-            image_string : str = base64.b64encode(buffer.getbuffer()).decode("ascii")
-            image_string
-
-        return None
+            image_string = base64.b64encode(buffer.getbuffer()).decode("ascii")
+            
+        return image_string
 
     def create_box_plot_function(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> Callable[..., Any]:
 
