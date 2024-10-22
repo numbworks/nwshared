@@ -17,9 +17,9 @@ setup(
     url = "https://github.com/numbworks/nwshared",
     py_modules = [ MODULE_NAME ],
     install_requires = [
-        "matplotlib>=3.8.2",
-        "numpy>=1.26.3",
-        "pandas>=2.2.0",
+        "matplotlib>=3.9.2",
+        "numpy>=2.1.2",
+        "pandas>=2.2.3",
         "requests>=2.32.3",
         "jinja2>=3.1.4"
     ],
