@@ -4,7 +4,7 @@ RUN pip install numpy==2.1.2
 RUN pip install pyarrow==17.0.0
 RUN pip install pandas==2.2.3
 RUN pip install requests==2.32.3
-RUN pip install matplotlib==3.8.2
+RUN pip install matplotlib==3.9.2
 RUN pip install coverage==7.6.4
 RUN pip install parameterized==0.9.0
 RUN pip install jinja2==3.1.4
