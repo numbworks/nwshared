@@ -292,7 +292,7 @@ class PlotManager():
 
         func : Callable[..., Any] = lambda : (
             (plt.figure(figsize = figsize)),
-            (plt.boxplot(x = df[x_name], vert = False, labels = [x_name])),
+            (plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])),
             (plt.show())
         )
 
@@ -312,7 +312,7 @@ class PlotManager():
         buffer : BytesIO = BytesIO()
 
         plt.figure(figsize = figsize)
-        plt.boxplot(x = df[x_name], vert = False, labels = [x_name])
+        plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])
         plt.savefig(buffer, format = "png", bbox_inches = 'tight')
         plt.close()
 
