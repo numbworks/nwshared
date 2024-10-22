@@ -7,7 +7,10 @@
 			"settings": {},
 			"extensions": [
 				"ms-python.python",
-				"ms-python.vscode-pylance"
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter",
+				"ms-toolsai.datawrangler",
+				"shd101wyy.markdown-preview-enhanced"
 			]
 		}
 	}
