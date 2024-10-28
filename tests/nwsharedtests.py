@@ -19,7 +19,7 @@ from unittest.mock import call, mock_open, patch
 # LOCAL MODULES
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
-from nwshared import PlotManager, DataFrameReverser, VersionChecker, Formatter
+from nwshared import PlotManager, DataFrameReverser, Formatter
 from nwshared import Converter, LambdaProvider, DisplayPreProcessor, MarkdownHelper
 
 # SUPPORT METHODS
@@ -406,7 +406,7 @@ class PlotManagerTestCase(unittest.TestCase):
 
         # Assert
         mock_figure.assert_called_once_with(figsize = figsize)
-        mock_boxplot.assert_called_once_with(x = df[x_name], vert = False, labels = [x_name])
+        mock_boxplot.assert_called_once_with(x = df[x_name], vert = False, tick_labels = [x_name])
         mock_show.assert_called_once()
 
     def test_createbarplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
@@ -503,24 +503,6 @@ class DataFrameReverserTestCase(unittest.TestCase):
                
         # Act
         actual : str = DataFrameReverser().convert_dataframe_to_source_code(df = df)
-
-        # Assert
-        self.assertEqual(expected, actual)
-class VersionCheckerTestCase(unittest.TestCase):
-
-    @parameterized.expand([
-        [(3, 12, 1), (3, 12, 1), "The installed Python version is matching the expected one (installed: '3.12.1', expected: '3.12.1')."],
-        [(3, 11, 11), (3, 12, 1), "Warning! The installed Python is not matching the expected one (installed: '3.11.11', expected: '3.12.1')."],
-    ])
-    def test_getpythonversionstatus_shouldreturnexpectedstring_wheninvoked(self, installed : Tuple[int, int, int], required : Tuple[int, int, int], expected : str):
-
-        # Arrange
-        # Act
-        with patch.object(sys, "version_info") as mocked_vi:
-            mocked_vi.major = installed[0]
-            mocked_vi.minor = installed[1]
-            mocked_vi.micro = installed[2]
-            actual : str = VersionChecker().get_python_version_status(required = required)
 
         # Assert
         self.assertEqual(expected, actual)

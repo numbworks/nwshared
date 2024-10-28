@@ -9,7 +9,6 @@ import base64
 import os
 import re
 import requests
-import sys
 from datetime import datetime
 from datetime import date
 from io import BytesIO
@@ -22,28 +21,6 @@ from typing import Any, Callable, Tuple, Optional
 
 # CONSTANTS
 # STATIC CLASSES
-class _MessageCollection():
-
-    '''Collects all the messages used for logging and for the exceptions.'''
-    
-    @staticmethod
-    def __format_version(version : Tuple[int, int, int]) -> str:
-
-        "Converts version to string."
-
-        return f"{version[0]}.{version[1]}.{version[2]}"
-    
-    @staticmethod
-    def installed_python_version_matching(installed : Tuple[int, int, int], required : Tuple[int, int, int]) -> str:
-        installed_str : str = _MessageCollection.__format_version(version = installed)
-        required_str : str = _MessageCollection.__format_version(version = required)
-        return f"The installed Python version is matching the expected one (installed: '{installed_str}', expected: '{required_str}')."
-    @staticmethod
-    def installed_python_version_not_matching(installed : Tuple[int, int, int], required : Tuple[int, int, int]) -> str:
-        installed_str : str = _MessageCollection.__format_version(version = installed)
-        required_str : str = _MessageCollection.__format_version(version = required)
-        return f"Warning! The installed Python is not matching the expected one (installed: '{installed_str}', expected: '{required_str}')."
-
 # CLASSES
 class OutlierManager():
     
@@ -238,7 +215,7 @@ class PlotManager():
         '''Shows a box plot.'''
     
         plt.figure(figsize =(5, 5))
-        plt.boxplot(x = df[x_name], vert = False, labels = [x_name])
+        plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])
         plt.show()
 
     def create_bar_plot_function(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
@@ -389,20 +366,6 @@ class DataFrameReverser():
         df_str = self.__clean_dataframe_string(df_str = df_str)
 
         return df_str
-class VersionChecker():
-
-    '''Collects all the logic related to Python version checking.'''
-
-    def get_python_version_status(self, required : Tuple[int, int, int] = (3, 12, 1)) -> str:
-
-        '''Returns a warning message if the installed Python version doesn't match the required one.'''
-
-        installed : Tuple[int, int, int] = (sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
-        
-        if installed == required:
-            return _MessageCollection.installed_python_version_matching(installed = installed, required = required)
-        else:
-            return _MessageCollection.installed_python_version_not_matching(installed = installed, required = required)
 class Formatter():
 
     '''Collects all the logic related to formatting tasks.'''
