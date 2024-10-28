@@ -91,8 +91,8 @@ To check for the updatability of the dependencies this library is built upon, yo
     ```
     cd src
     python3
-    from nwpackageversions import StatusChecker
-    StatusChecker().check("/workspaces/nwshared/.devcontainer/Dockerfile")
+    from nwpackageversions import RequirementChecker
+    RequirementChecker().check("/workspaces/nwshared/.devcontainer/Dockerfile")
     ```
 
 5. You will get a log containing a list of up-to-date and out-of-date dependencies, that you can use to decide which update to perform.

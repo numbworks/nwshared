@@ -1,6 +1,7 @@
 v1.6.0
 - Library:
 	- Maintenance: removed VersionChecker.
+	- Maintenance: dependency update (nwpackageversions v1.1.0 => v1.2.0).
 - Documentation:
 	- Feature: updated to v1.6.0.
 
