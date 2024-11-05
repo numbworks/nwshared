@@ -1,5 +1,4 @@
 # GLOBAL MODULES
-import IPython.core.display
 import os
 import pandas as pd
 import requests
@@ -8,7 +7,6 @@ import unittest
 from contextlib import redirect_stdout
 from datetime import date, datetime
 from io import StringIO
-from IPython.core.display import display
 from numpy import float64
 from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
@@ -736,46 +734,50 @@ class DisplayerTestCase(unittest.TestCase):
         
         # Arrange
         # Act, Assert
-        with patch.object(DataFrame, "style") as style_mock:
- 
-            # Act
-            Displayer().display(df = self.df, hide_index = False, formatters = None)
+        with redirect_stdout(None):
+            with patch.object(DataFrame, "style") as style_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = False, formatters = None)
 
-            # Assert
-            style_mock.format.assert_has_calls([call()])
+                # Assert
+                style_mock.format.assert_has_calls([call()])
     def test_display_shouldperformexpectedcalls_whenhideindexisfalseandformattersisnotnone(self):
         
         # Arrange
         # Act, Assert
-        with patch.object(DataFrame, "style") as style_mock:
- 
-            # Act
-            Displayer().display(df = self.df, hide_index = False, formatters = self.formatters)
+        with redirect_stdout(None):
+            with patch.object(DataFrame, "style") as style_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = False, formatters = self.formatters)
 
-            # Assert
-            style_mock.format.assert_has_calls([call(), call(self.formatters)])
+                # Assert
+                style_mock.format.assert_has_calls([call(), call(self.formatters)])
     def test_display_shouldperformexpectedcalls_whenhideindexistrue(self):
         
         # Arrange
         # Act, Assert
-        with patch.object(Styler, "hide") as hide_mock:
- 
-            # Act
-            Displayer().display(df = self.df, hide_index = True)
+        with redirect_stdout(None):
+            with patch.object(Styler, "hide") as hide_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = True)
 
-            # Assert
-            self.assertTrue(hide_mock.called)
+                # Assert
+                self.assertTrue(hide_mock.called)
     def test_display_shouldperformexpectedcalls_whenhideindexisfalse(self):
         
         # Arrange
         # Act, Assert
-        with patch.object(Styler, "hide") as hide_mock:
- 
-            # Act
-            Displayer().display(df = self.df, hide_index = False)
+        with redirect_stdout(None):
+            with patch.object(Styler, "hide") as hide_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = False)
 
-            # Assert
-            self.assertFalse(hide_mock.called)
+                # Assert
+                self.assertFalse(hide_mock.called)
 
 # Main
 if __name__ == "__main__":
