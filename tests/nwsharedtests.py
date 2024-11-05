@@ -756,7 +756,7 @@ class DisplayerTestCase(unittest.TestCase):
             # Assert
             style_mock.format.assert_has_calls([call(), call(self.formatters)])
             style_mock.hide.assert_not_called()
-    def test_display_shouldhaveexpectedstylecalls_whenhideindexistrue(self):
+    def test_display_shouldhaveexpectedhidecall_whenhideindexistrue(self):
         
         # Arrange
         # Act, Assert
