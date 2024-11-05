@@ -6,11 +6,11 @@ RUN pip install pandas==2.2.3
 RUN pip install requests==2.32.3
 RUN pip install matplotlib==3.9.2
 RUN pip install jinja2==3.1.4
+RUN pip install ipykernel==6.29.5
 
 RUN pip install coverage==7.6.4
 RUN pip install parameterized==0.9.0
 
-RUN pip install ipykernel==6.29.5
 RUN pip install jupyter==1.1.1
 RUN pip install 'git+https://github.com/numbworks/nwpackageversions.git@v1.6.0#egg=nwpackageversions&subdirectory=src'
 

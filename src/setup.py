@@ -21,7 +21,8 @@ setup(
         "numpy>=2.1.2",
         "pandas>=2.2.3",
         "requests>=2.32.3",
-        "jinja2>=3.1.4"
+        "jinja2>=3.1.4",
+        "ipykernel==6.29.5"
     ],
     python_requires = ">=3.12",
     license = "MIT"
