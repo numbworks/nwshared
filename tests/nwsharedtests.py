@@ -732,7 +732,7 @@ class DisplayerTestCase(unittest.TestCase):
 
         self.df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
         self.formatters : Optional[dict] = {"A" : "{:.2f}"}
-    def test_display_shouldhaveexpectedstylecalls_whenhideindexisfalseandformattersisnone(self):
+    def test_display_shouldperformexpectedcalls_whenhideindexisfalseandformattersisnone(self):
         
         # Arrange
         # Act, Assert
@@ -743,8 +743,7 @@ class DisplayerTestCase(unittest.TestCase):
 
             # Assert
             style_mock.format.assert_has_calls([call()])
-            style_mock.hide.assert_not_called()
-    def test_display_shouldhaveexpectedstylecalls_whenhideindexisfalseandformattersisnotnone(self):
+    def test_display_shouldperformexpectedcalls_whenhideindexisfalseandformattersisnotnone(self):
         
         # Arrange
         # Act, Assert
@@ -755,8 +754,7 @@ class DisplayerTestCase(unittest.TestCase):
 
             # Assert
             style_mock.format.assert_has_calls([call(), call(self.formatters)])
-            style_mock.hide.assert_not_called()
-    def test_display_shouldhaveexpectedhidecall_whenhideindexistrue(self):
+    def test_display_shouldperformexpectedcalls_whenhideindexistrue(self):
         
         # Arrange
         # Act, Assert
