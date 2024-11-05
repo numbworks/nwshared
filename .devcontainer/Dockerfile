@@ -10,6 +10,8 @@ RUN pip install jinja2==3.1.4
 RUN pip install coverage==7.6.4
 RUN pip install parameterized==0.9.0
 
+RUN pip install ipykernel==6.29.5
+RUN pip install jupyter==1.1.1
 RUN pip install 'git+https://github.com/numbworks/nwpackageversions.git@v1.6.0#egg=nwpackageversions&subdirectory=src'
 
 RUN wget https://github.com/jgm/pandoc/releases/download/3.4/pandoc-3.4-1-amd64.deb \
