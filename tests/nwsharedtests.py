@@ -765,6 +765,17 @@ class DisplayerTestCase(unittest.TestCase):
 
             # Assert
             self.assertTrue(hide_mock.called)
+    def test_display_shouldperformexpectedcalls_whenhideindexisfalse(self):
+        
+        # Arrange
+        # Act, Assert
+        with patch.object(Styler, "hide") as hide_mock:
+ 
+            # Act
+            Displayer().display(df = self.df, hide_index = False)
+
+            # Assert
+            self.assertFalse(hide_mock.called)
 
 # Main
 if __name__ == "__main__":
