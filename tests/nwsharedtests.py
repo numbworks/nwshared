@@ -1,4 +1,5 @@
 # GLOBAL MODULES
+import IPython.core.display
 import os
 import pandas as pd
 import requests
@@ -7,6 +8,7 @@ import unittest
 from contextlib import redirect_stdout
 from datetime import date, datetime
 from io import StringIO
+from IPython.core.display import display
 from numpy import float64
 from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
@@ -724,6 +726,47 @@ class MarkdownHelperTestCase(unittest.TestCase):
         
         # Assert
         self.assertEqual(actual, expected)
+class DisplayerTestCase(unittest.TestCase):
+
+    def setUp(self) -> None:
+
+        self.df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
+        self.formatters : Optional[dict] = {"A" : "{:.2f}"}
+    def test_display_shouldhaveexpectedstylecalls_whenhideindexisfalseandformattersisnone(self):
+        
+        # Arrange
+        # Act, Assert
+        with patch.object(DataFrame, "style") as style_mock:
+ 
+            # Act
+            Displayer().display(df = self.df, hide_index = False, formatters = None)
+
+            # Assert
+            style_mock.format.assert_has_calls([call()])
+            style_mock.hide.assert_not_called()
+    def test_display_shouldhaveexpectedstylecalls_whenhideindexisfalseandformattersisnotnone(self):
+        
+        # Arrange
+        # Act, Assert
+        with patch.object(DataFrame, "style") as style_mock:
+ 
+            # Act
+            Displayer().display(df = self.df, hide_index = False, formatters = self.formatters)
+
+            # Assert
+            style_mock.format.assert_has_calls([call(), call(self.formatters)])
+            style_mock.hide.assert_not_called()
+    def test_display_shouldhaveexpectedstylecalls_whenhideindexistrue(self):
+        
+        # Arrange
+        # Act, Assert
+        with patch.object(Styler, "hide") as hide_mock:
+ 
+            # Act
+            Displayer().display(df = self.df, hide_index = True)
+
+            # Assert
+            self.assertTrue(hide_mock.called)
 
 # Main
 if __name__ == "__main__":
