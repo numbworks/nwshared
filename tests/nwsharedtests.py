@@ -20,7 +20,7 @@ from unittest.mock import call, mock_open, patch
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
 from nwshared import PlotManager, DataFrameReverser, Formatter
-from nwshared import Converter, LambdaProvider, DisplayPreProcessor, MarkdownHelper
+from nwshared import Converter, LambdaProvider, Displayer, MarkdownHelper
 
 # SUPPORT METHODS
 class ObjectMother():
@@ -652,36 +652,6 @@ class LambdaProviderTestCase(unittest.TestCase):
             actual : str = buf.getvalue().replace("\n", "")
 
             self.assertEqual(expected, actual)
-class DisplayPreProcessorTestCase(unittest.TestCase):
-
-    def test_hideindex_shouldreturnstylerobjectwithhiddenindex_whennoformattersareprovided(self):
-        
-        # Arrange
-        df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
-        diplay_pp : DisplayPreProcessor = DisplayPreProcessor()
-
-        # Act
-        actual : Styler = diplay_pp.hide_index(df = df)
-        actual_html : str = actual.to_html()        
-
-        # Assert
-        self.assertTrue(actual.hide_index_[0])
-        self.assertIn("1.123456", actual_html)
-        self.assertIn("2.654321", actual_html)
-    def test_hideindex_shouldformatfloatvaluesasexpected_whenformattersareprovided(self):
-
-        # Arrange
-        df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
-        formatters : Optional[dict] = {"A" : "{:.2f}"}
-
-        # Act
-        actual : Styler = DisplayPreProcessor().hide_index(df = df, formatters = formatters)
-        actual_html : str = actual.to_html()
-
-        # Assert
-        self.assertTrue(actual.hide_index_[0])
-        self.assertIn("1.12", actual_html)
-        self.assertIn("2.65", actual_html)
 class MarkdownHelperTestCase(unittest.TestCase):
 
     def test_getmarkdownheader_shouldreturnexpectedstring_wheninvoked(self):
@@ -754,6 +724,60 @@ class MarkdownHelperTestCase(unittest.TestCase):
         
         # Assert
         self.assertEqual(actual, expected)
+class DisplayerTestCase(unittest.TestCase):
+
+    def setUp(self) -> None:
+
+        self.df : DataFrame = DataFrame({"A": [1.123456, 2.654321], "B": [3.987654, 4.123456]})
+        self.formatters : Optional[dict] = {"A" : "{:.2f}"}
+    def test_display_shouldperformexpectedcalls_whenhideindexisfalseandformattersisnone(self):
+        
+        # Arrange
+        # Act, Assert
+        with redirect_stdout(None):
+            with patch.object(DataFrame, "style") as style_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = False, formatters = None)
+
+                # Assert
+                style_mock.format.assert_has_calls([call()])
+    def test_display_shouldperformexpectedcalls_whenhideindexisfalseandformattersisnotnone(self):
+        
+        # Arrange
+        # Act, Assert
+        with redirect_stdout(None):
+            with patch.object(DataFrame, "style") as style_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = False, formatters = self.formatters)
+
+                # Assert
+                style_mock.format.assert_has_calls([call(), call(self.formatters)])
+    def test_display_shouldperformexpectedcalls_whenhideindexistrue(self):
+        
+        # Arrange
+        # Act, Assert
+        with redirect_stdout(None):
+            with patch.object(Styler, "hide") as hide_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = True)
+
+                # Assert
+                self.assertTrue(hide_mock.called)
+    def test_display_shouldperformexpectedcalls_whenhideindexisfalse(self):
+        
+        # Arrange
+        # Act, Assert
+        with redirect_stdout(None):
+            with patch.object(Styler, "hide") as hide_mock:
+    
+                # Act
+                Displayer().display(df = self.df, hide_index = False)
+
+                # Assert
+                self.assertFalse(hide_mock.called)
 
 # Main
 if __name__ == "__main__":

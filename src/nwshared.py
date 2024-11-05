@@ -12,6 +12,7 @@ import requests
 from datetime import datetime
 from datetime import date
 from io import BytesIO
+from IPython.core.display import display
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from numpy import float64
@@ -470,33 +471,6 @@ class LambdaProvider():
         dt_str : str = Formatter().format_to_iso_8601(dt = now_function(), include_time = True)
 
         return lambda msg : print(f"[{dt_str}] {msg}")
-class DisplayPreProcessor():
-
-    '''Provides pre-processing methods for IPython's display().'''
-
-    def hide_index(self, df : DataFrame, formatters : Optional[dict] = None) -> Styler:
-
-        '''
-            Hides df's index.
-        
-            Example:
-
-                dpp : DisplayPreProcessor = DisplayPreProcessor()
-                # ...
-                display(dpp.hide_index(df = df))
-
-            Example for 'formatters':
-
-                formatters : dict = { "Price" : "{:.2f}" }
-        '''
-
-        styler : Styler = df.style.format()
-        if formatters:
-            styler = df.style.format(formatters)
-
-        styler.hide()
-
-        return styler
 class MarkdownHelper():
 
     '''Collects a bunch of helper functions related to Markdown.'''
@@ -563,6 +537,29 @@ class MarkdownHelper():
         md_content += ""
 
         return md_content
+class Displayer():
+
+    '''Adapter around IPython.core.display.display().'''
+
+    def display(self, df : DataFrame, hide_index : bool = True, formatters : Optional[dict] = None) -> None:
+
+        '''
+            Displays df in Jupyter Notebook according to provided arguments.
+
+            Example for 'formatters':
+
+                formatters : dict = { "Price" : "{:.2f}" }
+        '''
+
+        styler : Styler = df.style.format()
+
+        if hide_index:
+            styler.hide()
+
+        if formatters:
+            styler = df.style.format(formatters)
+
+        display(styler)
 
 # MAIN
 if __name__ == "__main__":

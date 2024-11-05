@@ -1,3 +1,10 @@
+v1.7.0 - BREAKING CHANGES
+- Library:
+	- Feature: evolved DisplayPreProcessor in Displayer.
+	- Maintenance: dependency update (nwpackageversions v1.2.0 => v1.6.0).
+- Documentation:
+	- Feature: updated to v1.7.0.
+
 v1.6.0
 - Library:
 	- Maintenance: removed VersionChecker.
