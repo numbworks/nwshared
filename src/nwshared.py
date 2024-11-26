@@ -553,11 +553,11 @@ class Displayer():
 
         styler : Styler = df.style.format()
 
-        if hide_index:
-            styler.hide()
-
         if formatters:
             styler = df.style.format(formatters)
+
+        if hide_index:
+            styler.hide()
 
         display(styler)
 
