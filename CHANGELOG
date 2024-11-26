@@ -1,6 +1,8 @@
 v1.7.1
 - Library:
 	- Bugfix: if formatters were provided to Displayer().display(), hide_index didn't work.
+- Documentation:
+	- Feature: updated to v1.7.1.
 
 v1.7.0 - BREAKING CHANGES
 - Library:
