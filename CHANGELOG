@@ -1,3 +1,7 @@
+v1.7.1
+- Library:
+	- Bugfix: if formatters were provided to Displayer().display(), hide_index didn't work.
+
 v1.7.0 - BREAKING CHANGES
 - Library:
 	- Feature: evolved DisplayPreProcessor in Displayer.
