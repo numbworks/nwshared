@@ -30,6 +30,13 @@ coverage-status:
 	coverage run -m unittest $(MODULE_NAME)tests.py > /dev/null 2>&1; \
 	value=$$(coverage report --omit=$(MODULE_NAME)tests.py | grep -oP 'TOTAL\s+\d+\s+\d+\s+\K\d+(?=%)'); \
 	if [ $$value -ge $(COVERAGE_THRESHOLD) ]; then echo "[OK] $@: unit test coverage >= $(COVERAGE_THRESHOLD)%."; else echo "[WARNING] $@: unit test coverage < $(COVERAGE_THRESHOLD)%."; fi;
+coverage-detailed:
+	@cd $(ROOT_DIR)/tests/; \
+	coverage run -m unittest $(MODULE_NAME)tests.py > /dev/null 2>&1; \
+	rm -rf htmlcov; \
+	coverage html --omit=$(MODULE_NAME)tests.py && sed -n '/<table class="index" data-sortable>/,/<\/table>/p' htmlcov/class_index.html | pandoc --from html --to plain; \
+	sleep 3; \
+	rm -rf htmlcov;
 
 # AGGREGATE TARGETS
 all-status: clear makefile-info type-status howtorelease-status changelog-status setup-status coverage-status
