@@ -39,6 +39,16 @@ coverage-detailed:
 	coverage html --omit=$(MODULE_NAME)tests.py && sed -n '/<table class="index" data-sortable>/,/<\/table>/p' htmlcov/class_index.html | pandoc --from html --to plain; \
 	sleep 3; \
 	rm -rf htmlcov;
+try-install:
+	@clear; \
+	rm -rf venv; \
+	cd $(ROOT_DIR)/src/; \
+	python3 -m venv venv; \
+	source venv/bin/activate; \
+	pip install .; \
+	deactivate; \
+	sleep 3; \
+	rm -rf venv;
 
 # AGGREGATE TARGETS
 all-status: clear makefile-info type-status howtorelease-status changelog-status setup-status coverage-status
