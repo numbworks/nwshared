@@ -44,17 +44,17 @@ try-install:
 	cd /home; \
 	rm -rf build; \
 	rm -rf dist; \
-	rm -rf nwshared.egg-info; \
+	rm -rf $(MODULE_NAME).egg-info; \
 	rm -rf venv; \
-	python /workspaces/nwshared/src/setup.py bdist_wheel; \
+	python /workspaces/$(MODULE_NAME)/src/setup.py bdist_wheel; \
 	python3 -m venv venv; \
 	source venv/bin/activate; \
-	pip install dist/nwshared*.whl; \
-	pip show nwshared | grep Version; \
+	pip install dist/$(MODULE_NAME)*.whl; \
+	pip show $(MODULE_NAME) | grep Version; \
 	deactivate; \
 	rm -rf build; \
 	rm -rf dist; \
-	rm -rf nwshared.egg-info; \
+	rm -rf $(MODULE_NAME).egg-info; \
 	rm -rf venv;
 
 # AGGREGATE TARGETS
