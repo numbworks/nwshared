@@ -41,13 +41,20 @@ coverage-detailed:
 	rm -rf htmlcov;
 try-install:
 	@clear; \
+	cd /home; \
+	rm -rf build; \
+	rm -rf dist; \
+	rm -rf nwshared.egg-info; \
 	rm -rf venv; \
-	cd $(ROOT_DIR)/src/; \
+	python /workspaces/nwshared/src/setup.py bdist_wheel; \
 	python3 -m venv venv; \
 	source venv/bin/activate; \
-	pip install .; \
+	pip install dist/nwshared*.whl; \
+	pip show nwshared | grep Version; \
 	deactivate; \
-	sleep 3; \
+	rm -rf build; \
+	rm -rf dist; \
+	rm -rf nwshared.egg-info; \
 	rm -rf venv;
 
 # AGGREGATE TARGETS
