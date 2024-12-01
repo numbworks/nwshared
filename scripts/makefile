@@ -15,9 +15,11 @@ makefile-info:
 	echo "COVERAGE_THRESHOLD: $(COVERAGE_THRESHOLD)%"
 
 type-verbose:
-	@mypy $(ROOT_DIR)/src/$(MODULE_NAME).py 
+	@clear; \
+	mypy $(ROOT_DIR)/src/$(MODULE_NAME).py;
 coverage-verbose:
-	@cd $(ROOT_DIR)/tests/; \
+	@clear; \
+	cd $(ROOT_DIR)/tests/; \
 	coverage run -m unittest $(MODULE_NAME)tests.py > /dev/null 2>&1; \
 	rm -rf htmlcov; \
 	coverage html --omit=$(MODULE_NAME)tests.py && sed -n '/<table class="index" data-sortable>/,/<\/table>/p' htmlcov/class_index.html | pandoc --from html --to plain; \

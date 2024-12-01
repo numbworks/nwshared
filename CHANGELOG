@@ -1,7 +1,7 @@
 v1.8.0 - BREAKING CHANGES
 - Library:
 	- Feature: makefile added.
-	- Bugfix: MyPy types fixed for Displayer class.
+	- Bugfix: PlotManager types fixed according to mypy analysis.
 - Documentation:
 	- Feature: updated to v1.8.0.
 

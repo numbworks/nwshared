@@ -211,11 +211,11 @@ class PlotManager():
 
         title = f"{y_name} by {x_name}"
         df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize)
-    def show_box_plot(self, df : DataFrame, x_name : str) -> None:
+    def show_box_plot(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
 
         '''Shows a box plot.'''
     
-        plt.figure(figsize =(5, 5))
+        plt.figure(figsize = figsize)
         plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])
         plt.show()
 
@@ -226,7 +226,7 @@ class PlotManager():
 
             Example:
             >>> func = PlotManager().create_bar_plot_function(df = df , x_name = "seller_alias")
-            >>> _ = func()
+            >>> func()
         '''
 
         func : Callable[[], None] = lambda : self.show_bar_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
@@ -258,21 +258,17 @@ class PlotManager():
             
         return image_string
 
-    def create_box_plot_function(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> Callable[..., Any]:
+    def create_box_plot_function(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
 
         '''
             Returns a function that visualizes a box plot.
 
             Example:
             >>> func = PlotManager().create_box_plot_function(df = df , x_name = "seller_alias")
-            >>> _ = func()
+            >>> func()
         '''
 
-        func : Callable[..., Any] = lambda : (
-            (plt.figure(figsize = figsize)),
-            (plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])),
-            (plt.show())
-        )
+        func : Callable[[], None] = lambda : self.show_box_plot(df = df, x_name = x_name, figsize = figsize)
 
         return func
     def create_box_plot_as_base64(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> str:
