@@ -147,7 +147,7 @@ This software package ships with a `makefile` that include all the pre-release v
 1. Launch Visual Studio Code;
 2. Click on <ins>File</ins> > <ins>Open folder</ins> > `nwshared`;
 3. <ins>Terminal</ins> > <ins>New Terminal</ins>;
-4. Run the following command:
+4. Run the following commands:
 
     ```
     cd /workspaces/nwshared/scripts
@@ -176,6 +176,16 @@ COVERAGE_THRESHOLD: 70%
 [OK] setup-concise: 'setup.py' updated to current version!
 [OK] coverage-concise: unit test coverage >= 70%.
 ```
+
+Considering the old-fashioned syntax adopted by `make`, here a summary of its less intuitive aspects:
+
+| Aspect | Description |
+|---|---|
+| `.PHONY` | All the targets that need to be called from another target need to be listed here. |
+| `SHELL := /bin/bash` | By default, `make` uses `sh`, which doesn't support some functions such as string comparison. |
+| `@` | By default, `make` logs all the commands included in the target. The `@` disables this behaviour. |
+| `$$` | Necessary to escape `$`. |
+| `$@` | Variable that stores the target name. |
 
 ## Known Issues - "Import nwshared could not be resolved Pylance (reportMissingImports)"
 
