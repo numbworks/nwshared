@@ -139,6 +139,44 @@ In order to do so:
 
 Note: if something goes wrong, don't panic - Github releases can be deleted and re-created as many times as you want.
 
+
+## The makefile
+
+This software package ships with a `makefile` that include all the pre-release verification actions:
+
+1. Launch Visual Studio Code;
+2. Click on <ins>File</ins> > <ins>Open folder</ins> > `nwshared`;
+3. <ins>Terminal</ins> > <ins>New Terminal</ins>;
+4. Run the following command:
+
+    ```
+    cd /workspaces/nwshared/scripts
+    make -f makefile <target_name>
+    ```
+5. Done!
+
+The avalaible target names are:
+
+| Target Name | Description |
+|---|---|
+| type-verbose | Runs a type verification task and logs everything. |
+| coverage-verbose | Runs a unit test coverage calculation task and logs the % per class. |
+| tryinstall-verbose | Creates a venv and tries to build+install this package to verify everything is ok. |
+| all-concise | Runs a batch of verification tasks and logs one summary line for each of them. |
+
+The expected outcome for `all-concise` is:
+
+```
+MODULE_NAME: nwshared
+MODULE_VERSION: 1.8.0
+COVERAGE_THRESHOLD: 70%
+[WARNING] type-concise: not passed! '1' error(s) found!
+[OK] howtorelease-concise: 'How-to Release' updated to current version!
+[WARNING] changelog-concise: 'CHANGELOG' not updated to current version!
+[OK] setup-concise: 'setup.py' updated to current version!
+[OK] coverage-concise: unit test coverage >= 70%.
+```
+
 ## Known Issues - "Import nwshared could not be resolved Pylance (reportMissingImports)"
 
 If while trying to import `nwshared` in `Visual Studio Code` the following warning appears:
