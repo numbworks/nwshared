@@ -48,7 +48,7 @@ howtorelease-concise:
 	@value=$$(cat $(ROOT_DIR)/docs/docs-$(MODULE_NAME).md | grep -c "\`v$(MODULE_VERSION)\`;\|$(MODULE_VERSION)#egg"); \
 	if [ $$value -eq 2 ]; then echo "[OK] $@: 'How-to Release' updated to current version!"; else echo "[WARNING] $@: 'How-to Release' not updated to current version!"; fi;
 changelog-concise:
-	@value=$$(cat $(ROOT_DIR)/CHANGELOG | grep -c "v$(MODULE_VERSION)$$"); \
+	@value=$$(cat $(ROOT_DIR)/CHANGELOG | grep -c -e "v$(MODULE_VERSION)$$" -e "v$(MODULE_VERSION) - BREAKING CHANGES$$"); \
 	if [ $$value -eq 1 ]; then echo "[OK] $@: 'CHANGELOG' updated to current version!"; else echo "[WARNING] $@: 'CHANGELOG' not updated to current version!"; fi;
 setup-concise:
 	@value=$$(cat $(ROOT_DIR)/src/setup.py | grep -oP 'MODULE_VERSION\s*:\s*str\s*=\s*"v\K[\d.]+'); \
