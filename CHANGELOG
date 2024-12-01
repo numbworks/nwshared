@@ -1,3 +1,10 @@
+v1.8.0 - BREAKING CHANGES
+- Library:
+	- Feature: makefile added.
+	- Bugfix: MyPy types fixed for Displayer class.
+- Documentation:
+	- Feature: updated to v1.8.0.
+
 v1.7.1
 - Library:
 	- Bugfix: if formatters were provided to Displayer().display(), hide_index didn't work.

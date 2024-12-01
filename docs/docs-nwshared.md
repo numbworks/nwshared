@@ -13,6 +13,7 @@ Contact: numbworks@gmail.com
 | 2024-10-28 | numbworks | Updated to v1.6.0. |
 | 2024-11-05 | numbworks | Updated to v1.7.0. |
 | 2024-11-26 | numbworks | Updated to v1.7.1. |
+| 2024-12-01 | numbworks | Updated to v1.8.0. |
 
 ## Introduction
 
@@ -106,13 +107,13 @@ To try out if this Python module installs as a package as expected in the projec
 
 In order to do so:
 
-1. Once you pushed all the changes to Gihub and merged them to master, create a new release and add a version tag to it - i.e. `v1.7.1`;
+1. Once you pushed all the changes to Gihub and merged them to master, create a new release and add a version tag to it - i.e. `v1.8.0`;
 
 2. Open your terminal application of choice and type the following commands:
 
     ```
     docker run -it python:3.12.5-bookworm /bin/bash
-    pip install 'git+https://github.com/numbworks/nwshared.git@v1.7.1#egg=nwshared&subdirectory=src'
+    pip install 'git+https://github.com/numbworks/nwshared.git@v1.8.0#egg=nwshared&subdirectory=src'
     pip show nwshared | grep "Version"
     ```
 
