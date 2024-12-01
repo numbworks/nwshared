@@ -1,3 +1,11 @@
+v1.8.0 - BREAKING CHANGES
+- Library:
+	- Feature: makefile added.
+	- Feature: PlotManager let you now specify the PlotKind in show_plot().
+	- Bugfix: PlotManager types fixed according to mypy analysis.
+- Documentation:
+	- Feature: updated to v1.8.0.
+
 v1.7.1
 - Library:
 	- Bugfix: if formatters were provided to Displayer().display(), hide_index didn't work.
