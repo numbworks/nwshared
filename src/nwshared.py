@@ -11,6 +11,7 @@ import re
 import requests
 from datetime import datetime
 from datetime import date
+from enum import StrEnum
 from io import BytesIO
 from IPython.core.display import display
 from matplotlib import pyplot as plt
@@ -21,6 +22,22 @@ from pandas.io.formats.style import Styler
 from typing import Any, Callable, Tuple, Optional
 
 # CONSTANTS
+class PlotKind(StrEnum):
+
+    '''All the kinds of plot supported by df.plot().'''
+
+    LINE = "line"
+    BAR = "bar"
+    BARH = "barh"
+    HIST = "hist"
+    KDE = "kde"
+    DENSITY = "density"
+    AREA = "area"
+    PIE = "pie"
+    SCATTER = "scatter"
+    HEXBIN = "hexbin"
+    # BOX = "box"
+
 # STATIC CLASSES
 # CLASSES
 class OutlierManager():
@@ -205,13 +222,13 @@ class PlotManager():
     
     '''Collects all the logic related to the plot management.'''
 
-    def show_plot(self, df : DataFrame, x_name : str, y_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
+    def show_plot(self, df : DataFrame, plot_kind : PlotKind, x_name : str, y_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
 
         '''Shows a plot created with df.plot().'''
 
         title = f"{y_name} by {x_name}"
-        df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize)
-    def create_plot_function(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
+        df.plot(x = x_name, y = y_name, legend = True, kind = plot_kind.value, title = title, figsize = figsize)
+    def create_plot_function(self, df : DataFrame, plot_kind : PlotKind, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
 
         '''
             Returns a function that visualizes a plot.
@@ -221,10 +238,10 @@ class PlotManager():
             >>> func()
         '''
 
-        func : Callable[[], None] = lambda : self.show_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        func : Callable[[], None] = lambda : self.show_plot(df = df, plot_kind = plot_kind, x_name = x_name, y_name = y_name, figsize = figsize)
 
         return func    
-    def create_plot_as_base64(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Optional[str]:
+    def create_plot_as_base64(self, df : DataFrame, plot_kind : PlotKind, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Optional[str]:
 
         '''
             Returns a plot as a base64 string or None.
@@ -239,7 +256,7 @@ class PlotManager():
         buffer : BytesIO = BytesIO()
 
         title = f"{y_name} by {x_name}"
-        fig : Optional[Figure] = df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize).get_figure()
+        fig : Optional[Figure] = df.plot(x = x_name, y = y_name, legend = True, kind = plot_kind.value, title = title, figsize = figsize).get_figure()
         
         image_string : Optional[str] = None
 

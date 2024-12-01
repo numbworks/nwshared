@@ -19,7 +19,7 @@ from unittest.mock import call, mock_open, patch
 # LOCAL MODULES
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 from nwshared import OutlierManager, FilePathManager, FileManager, PageManager
-from nwshared import PlotManager, DataFrameReverser, Formatter
+from nwshared import PlotManager, PlotKind, DataFrameReverser, Formatter
 from nwshared import Converter, LambdaProvider, Displayer, MarkdownHelper
 
 # SUPPORT METHODS
@@ -374,19 +374,20 @@ class PlotManagerTestCase(unittest.TestCase):
 
         # Arrange
         df : DataFrame = DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+        plot_kind : PlotKind = PlotKind.BAR
         x_name : str = "A"
         y_name : str = "B"
         figsize : Tuple[int, int] = (5, 5)
 
         # Act
-        PlotManager().show_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        PlotManager().show_plot(df = df, plot_kind = plot_kind, x_name = x_name, y_name = y_name, figsize = figsize)
 
         # Assert
         mock_plot.assert_called_once_with(
             x = x_name, 
             y = y_name, 
             legend = True, 
-            kind = "bar", 
+            kind = plot_kind.value, 
             title = f"{y_name} by {x_name}", 
             figsize=figsize
             )
@@ -394,12 +395,13 @@ class PlotManagerTestCase(unittest.TestCase):
 
         # Arrange
         df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        plot_kind : PlotKind = PlotKind.BAR
         x_name : str = "seller_alias"
         y_name : str = "items"
         figsize : Tuple[int, int] = (5, 5)
 
         # Act
-        func : Callable[[], None] = PlotManager().create_plot_function(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        func : Callable[[], None] = PlotManager().create_plot_function(df = df, plot_kind = plot_kind, x_name = x_name, y_name = y_name, figsize = figsize)
 
         # Assert
         self.assertTrue(callable(func))
@@ -408,12 +410,13 @@ class PlotManagerTestCase(unittest.TestCase):
         
         # Arrange
         df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        plot_kind : PlotKind = PlotKind.BAR
         x_name : str = "seller_alias"
         y_name : str = "items"
         figsize : Tuple[int, int] = (5, 5)
 
         # Act
-        actual : Optional[str] = PlotManager().create_plot_as_base64(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        actual : Optional[str] = PlotManager().create_plot_as_base64(df = df, plot_kind = plot_kind, x_name = x_name, y_name = y_name, figsize = figsize)
         actual_str : str = cast(str, actual)
 
         # Assert
