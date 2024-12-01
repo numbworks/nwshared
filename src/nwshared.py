@@ -205,41 +205,33 @@ class PlotManager():
     
     '''Collects all the logic related to the plot management.'''
 
-    def show_bar_plot(self, df : DataFrame, x_name : str, y_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
+    def show_plot(self, df : DataFrame, x_name : str, y_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
 
-        '''Shows a bar plot.'''
+        '''Shows a plot created with df.plot().'''
 
         title = f"{y_name} by {x_name}"
         df.plot(x = x_name, y = y_name, legend = True, kind = "bar", title = title, figsize = figsize)
-    def show_box_plot(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
-
-        '''Shows a box plot.'''
-    
-        plt.figure(figsize = figsize)
-        plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])
-        plt.show()
-
-    def create_bar_plot_function(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
+    def create_plot_function(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
 
         '''
-            Returns a function that visualizes a bar plot.
+            Returns a function that visualizes a plot.
 
             Example:
-            >>> func = PlotManager().create_bar_plot_function(df = df , x_name = "seller_alias")
+            >>> func = PlotManager().create_plot_function(df = df , x_name = "seller_alias")
             >>> func()
         '''
 
-        func : Callable[[], None] = lambda : self.show_bar_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        func : Callable[[], None] = lambda : self.show_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
 
         return func    
-    def create_bar_plot_as_base64(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Optional[str]:
+    def create_plot_as_base64(self, df : DataFrame, x_name : str, y_name : str = "items", figsize : Tuple[int, int] = (5, 5)) -> Optional[str]:
 
         '''
-            Returns a bar plot as a base64 string or None.
+            Returns a plot as a base64 string or None.
 
             Example:            
             >>> plot_manager : PlotManager = PlotManager()
-            >>> image_string : str = plot_manager.create_bar_plot_as_base64(df = df, x_name = "seller_alias")
+            >>> image_string : str = plot_manager.create_plot_as_base64(df = df, x_name = "seller_alias")
             >>> image_string = plot_manager.create_html_image_tag(image_string = image_string)
             >>> HTML(image_string)
         '''
@@ -257,7 +249,14 @@ class PlotManager():
             image_string = base64.b64encode(buffer.getbuffer()).decode("ascii")
             
         return image_string
+   
+    def show_box_plot(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> None:
 
+        '''Shows a box plot created with plt.boxplot().'''
+    
+        plt.figure(figsize = figsize)
+        plt.boxplot(x = df[x_name], vert = False, tick_labels = [x_name])
+        plt.show()
     def create_box_plot_function(self, df : DataFrame, x_name : str, figsize : Tuple[int, int] = (5, 5)) -> Callable[[], None]:
 
         '''

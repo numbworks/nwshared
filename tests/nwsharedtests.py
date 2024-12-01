@@ -370,7 +370,7 @@ class PageManagerTestCase(unittest.TestCase):
 class PlotManagerTestCase(unittest.TestCase):
 
     @patch("pandas.DataFrame.plot")
-    def test_showbarplot_shouldbecalledwithprovidedarguments_wheninvoked(self, mock_plot) -> None:
+    def test_showplot_shouldbecalledwithprovidedarguments_wheninvoked(self, mock_plot) -> None:
 
         # Arrange
         df : DataFrame = DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
@@ -379,7 +379,7 @@ class PlotManagerTestCase(unittest.TestCase):
         figsize : Tuple[int, int] = (5, 5)
 
         # Act
-        PlotManager().show_bar_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        PlotManager().show_plot(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
 
         # Assert
         mock_plot.assert_called_once_with(
@@ -390,7 +390,35 @@ class PlotManagerTestCase(unittest.TestCase):
             title = f"{y_name} by {x_name}", 
             figsize=figsize
             )
-    
+    def test_createplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
+
+        # Arrange
+        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        x_name : str = "seller_alias"
+        y_name : str = "items"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        func : Callable[[], None] = PlotManager().create_plot_function(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+
+        # Assert
+        self.assertTrue(callable(func))
+        func() # Ensures that the function runs without error.
+    def test_createplotasbase64_shouldreturnexpectedstring_wheninvoked(self) -> None:
+        
+        # Arrange
+        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
+        x_name : str = "seller_alias"
+        y_name : str = "items"
+        figsize : Tuple[int, int] = (5, 5)
+
+        # Act
+        actual : Optional[str] = PlotManager().create_plot_as_base64(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
+        actual_str : str = cast(str, actual)
+
+        # Assert
+        self.assertTrue(actual_str.startswith("iVBORw0KGgo"))
+
     @patch('matplotlib.pyplot.show')
     @patch('matplotlib.pyplot.figure')
     @patch('matplotlib.pyplot.boxplot')
@@ -408,36 +436,6 @@ class PlotManagerTestCase(unittest.TestCase):
         mock_figure.assert_called_once_with(figsize = figsize)
         mock_boxplot.assert_called_once_with(x = df[x_name], vert = False, tick_labels = [x_name])
         mock_show.assert_called_once()
-
-    def test_createbarplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
-
-        # Arrange
-        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
-        x_name : str = "seller_alias"
-        y_name : str = "items"
-        figsize : Tuple[int, int] = (5, 5)
-
-        # Act
-        func : Callable[[], None] = PlotManager().create_bar_plot_function(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
-
-        # Assert
-        self.assertTrue(callable(func))
-        func() # Ensures that the function runs without error.
-    def test_createbarplotasbase64_shouldreturnexpectedstring_wheninvoked(self) -> None:
-        
-        # Arrange
-        df : DataFrame = DataFrame({"seller_alias": ["A", "B", "C"], "items": [10, 20, 30]})
-        x_name : str = "seller_alias"
-        y_name : str = "items"
-        figsize : Tuple[int, int] = (5, 5)
-
-        # Act
-        actual : Optional[str] = PlotManager().create_bar_plot_as_base64(df = df, x_name = x_name, y_name = y_name, figsize = figsize)
-        actual_str : str = cast(str, actual)
-
-        # Assert
-        self.assertTrue(actual_str.startswith("iVBORw0KGgo"))
-
     def test_createboxplotfunction_shouldreturnacallableobjectthatrunsasexpected_wheninvoked(self) -> None:
         
         # Arrange
