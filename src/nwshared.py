@@ -584,12 +584,11 @@ class Displayer():
     def display(self, obj : Union[DataFrame, Styler], hide_index : bool = True, formatters : Optional[dict] = None) -> None:
 
         '''
-            Displays styler in Jupyter Notebook according to provided arguments.
+            Displays obj in Jupyter Notebook according to provided arguments.
 
             Example for 'formatters':
 
                 formatters : dict = { "Price" : "{:.2f}" }
-
         '''
 
         if isinstance(obj, DataFrame):
@@ -597,7 +596,18 @@ class Displayer():
 
         if isinstance(obj, Styler):
             self.__display_styler(styler = obj, hide_index = hide_index, formatters = formatters)
+    def display_cascade(self, objs : list[Union[DataFrame, Styler]], hide_index : bool = True, formatters : Optional[dict] = None) -> None:
 
+        '''
+            Displays objects as a cascade in a Jupyter Notebook based on the provided arguments.
+
+            Example for 'formatters':
+
+                formatters : dict = { "Price" : "{:.2f}" }
+        '''
+
+        for obj in objs:
+            self.display(obj = obj, hide_index = hide_index, formatters = formatters)
 
 # MAIN
 if __name__ == "__main__":
