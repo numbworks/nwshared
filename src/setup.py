@@ -6,7 +6,7 @@ from setuptools import setup
 # INFORMATION
 MODULE_ALIAS : str = "nwsh"
 MODULE_NAME : str = "nwshared"
-MODULE_VERSION : str = "1.8.0"
+MODULE_VERSION : str = "1.8.1"
 
 # SETUP
 setup(

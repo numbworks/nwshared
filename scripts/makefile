@@ -3,7 +3,7 @@
 SHELL := /bin/bash
 ROOT_DIR := $(shell cd .. && pwd)
 MODULE_NAME = "nwshared"
-MODULE_VERSION = "1.8.0"
+MODULE_VERSION = "1.8.1"
 COVERAGE_THRESHOLD = 70
 
 # TARGETS
@@ -33,7 +33,7 @@ tryinstall-verbose:
 	rm -rf $(MODULE_NAME).egg-info; \
 	rm -rf venv; \
 	python /workspaces/$(MODULE_NAME)/src/setup.py bdist_wheel; \
-	python3 -m venv venv; \
+	python -m venv venv; \
 	source venv/bin/activate; \
 	pip install dist/$(MODULE_NAME)*.whl; \
 	pip show $(MODULE_NAME) | grep Version; \

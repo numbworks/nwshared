@@ -1,3 +1,9 @@
+v1.8.1
+- Library:
+	- Feature: Displayer.display() now support Styler objects and cascade mode.
+- Documentation:
+	- Feature: updated to v1.8.1.
+
 v1.8.0 - BREAKING CHANGES
 - Library:
 	- Feature: makefile added.
