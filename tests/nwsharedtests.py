@@ -739,7 +739,7 @@ class DisplayerTestCase(unittest.TestCase):
             with patch.object(DataFrame, "style") as style_mock:
     
                 # Act
-                Displayer().display(df = self.df, hide_index = False, formatters = None)
+                Displayer().display(obj = self.df, hide_index = False, formatters = None)
 
                 # Assert
                 style_mock.format.assert_has_calls([call()])
@@ -751,7 +751,7 @@ class DisplayerTestCase(unittest.TestCase):
             with patch.object(DataFrame, "style") as style_mock:
     
                 # Act
-                Displayer().display(df = self.df, hide_index = False, formatters = self.formatters)
+                Displayer().display(obj = self.df, hide_index = False, formatters = self.formatters)
 
                 # Assert
                 style_mock.format.assert_has_calls([call(), call(self.formatters)])
@@ -763,7 +763,7 @@ class DisplayerTestCase(unittest.TestCase):
             with patch.object(Styler, "hide") as hide_mock:
     
                 # Act
-                Displayer().display(df = self.df, hide_index = True)
+                Displayer().display(obj = self.df, hide_index = True)
 
                 # Assert
                 self.assertTrue(hide_mock.called)
@@ -775,7 +775,7 @@ class DisplayerTestCase(unittest.TestCase):
             with patch.object(Styler, "hide") as hide_mock:
     
                 # Act
-                Displayer().display(df = self.df, hide_index = False)
+                Displayer().display(obj = self.df, hide_index = False)
 
                 # Assert
                 self.assertFalse(hide_mock.called)

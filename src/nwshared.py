@@ -6,6 +6,7 @@ Alias: nwsh
 
 # GLOBAL MODULES
 import base64
+import copy
 import os
 import re
 import requests
@@ -19,7 +20,7 @@ from matplotlib.figure import Figure
 from numpy import float64
 from pandas import DataFrame, Index, Series
 from pandas.io.formats.style import Styler
-from typing import Any, Callable, Tuple, Optional
+from typing import Any, Callable, Tuple, Optional, Union
 
 # CONSTANTS
 class PlotKind(StrEnum):
@@ -553,15 +554,9 @@ class Displayer():
 
     '''Adapter around IPython.core.display.display().'''
 
-    def display(self, df : DataFrame, hide_index : bool = True, formatters : Optional[dict] = None) -> None:
+    def __display_df(self, df : DataFrame, hide_index : bool = True, formatters : Optional[dict] = None) -> None:
 
-        '''
-            Displays df in Jupyter Notebook according to provided arguments.
-
-            Example for 'formatters':
-
-                formatters : dict = { "Price" : "{:.2f}" }
-        '''
+        '''Displays df in Jupyter Notebook according to provided arguments.'''
 
         styler : Styler = df.style.format()
 
@@ -572,6 +567,37 @@ class Displayer():
             styler.hide()
 
         display(styler)
+    def __display_styler(self, styler : Styler, hide_index : bool = True, formatters : Optional[dict] = None) -> None:
+
+        '''Displays styler in Jupyter Notebook according to provided arguments.'''
+
+        new_styler : Styler = copy.deepcopy(styler)
+
+        if formatters:
+            new_styler.format(formatters)
+
+        if hide_index:
+            new_styler.hide()
+
+        display(new_styler)
+    
+    def display(self, obj : Union[DataFrame, Styler], hide_index : bool = True, formatters : Optional[dict] = None) -> None:
+
+        '''
+            Displays styler in Jupyter Notebook according to provided arguments.
+
+            Example for 'formatters':
+
+                formatters : dict = { "Price" : "{:.2f}" }
+
+        '''
+
+        if isinstance(obj, DataFrame):
+            self.__display_df(df = obj, hide_index = hide_index, formatters = formatters)
+
+        if isinstance(obj, Styler):
+            self.__display_styler(styler = obj, hide_index = hide_index, formatters = formatters)
+
 
 # MAIN
 if __name__ == "__main__":
