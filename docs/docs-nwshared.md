@@ -114,7 +114,7 @@ In order to do so:
 
     ```
     docker run -it python:3.12.5-bookworm /bin/bash
-    pip install 'git+https://github.com/numbworks/nwshared.git@v1.8.0#egg=nwshared&subdirectory=src'
+    pip install 'git+https://github.com/numbworks/nwshared.git@v1.8.1#egg=nwshared&subdirectory=src'
     pip show nwshared | grep "Version"
     ```
 
