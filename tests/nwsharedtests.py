@@ -13,7 +13,7 @@ from pandas import DataFrame, Index
 from pandas.io.formats.style import Styler
 from pandas.testing import assert_frame_equal
 from parameterized import parameterized
-from typing import Any, Callable, Optional, Tuple, cast
+from typing import Any, Callable, Optional, Tuple, Union, cast
 from unittest import mock
 from unittest.mock import Mock, call, mock_open, patch
 
@@ -845,6 +845,47 @@ class DisplayerTestCase(unittest.TestCase):
 
                 # Assert
                 self.assertFalse(hide.called)
+
+    def test_display_shouldcalldisplaydf_whenobjisdataframe(self):
+
+        # Arrange
+        hide_index : bool = True
+
+        # Act, Assert
+        with patch.object(Displayer, "_Displayer__display_df") as display_df:
+
+            # Act
+            Displayer().display(obj = self.df, hide_index = hide_index, formatters = self.formatters)
+
+            # Assert
+            display_df.assert_called_once_with(df = self.df, hide_index = hide_index, formatters = self.formatters)
+    def test_display_shouldcalldisplaystyler_whenobjisstyler(self):
+
+        # Arrange
+        hide_index : bool = True
+
+        # Act, Assert
+        with patch.object(Displayer, "_Displayer__display_styler") as display_styler:
+
+            # Act
+            Displayer().display(obj = self.styler, hide_index = hide_index, formatters = None)
+
+            # Assert
+            display_styler.assert_called_once_with(styler = self.styler, hide_index = hide_index, formatters = None)
+
+    def test_displaycascade_shouldcalldisplayforeachobject_whenobjsislist(self):
+
+        # Arrange
+        hide_index : bool = True
+        objs : list[Union[DataFrame, Styler]] = [self.df, self.styler]
+        
+        with patch.object(Displayer, "display") as display:
+
+            # Act
+            Displayer().display_cascade(objs = objs, hide_index = hide_index, formatters = self.formatters)
+
+            # Assert
+            self.assertEqual(display.call_count, len(objs))
 
 # Main
 if __name__ == "__main__":
