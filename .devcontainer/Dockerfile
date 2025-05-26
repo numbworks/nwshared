@@ -23,6 +23,8 @@ RUN wget https://github.com/jgm/pandoc/releases/download/3.4/pandoc-3.4-1-amd64.
 RUN pip install mypy==1.13.0
 RUN pip install types-requests==2.32.0.20241016
 RUN pip install pandas-stubs==2.2.3.241009
+RUN pip install radon==6.0.1
+RUN pip install pylint==3.3.3
 
 # OTHERS
 RUN pip install --upgrade pip==25.1.1
